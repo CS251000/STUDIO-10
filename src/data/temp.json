@@ -1,0 +1,113 @@
+[
+    {
+      "img": "https://watermark.lovepik.com/photo/40008/0007.jpg_wh1200.jpg",
+      "jobslip": "JS12345",
+      "title": "Acquisition Project",
+      "status": true,
+      "category": "Technology",
+      "fabricator": "John Doe",
+      "clothname": "Cotton",
+      "quality": "High",
+      "meter": 30
+    },
+    {
+      "img": "https://watermark.lovepik.com/photo/40008/0007.jpg_wh1200.jpg",
+      "jobslip": "JS12346",
+      "title": "Development Project",
+      "status": false,
+      "category": "Development",
+      "fabricator": "Jane Doe",
+      "clothname": "Silk",
+      "quality": "Medium",
+      "meter": 20
+    },
+    {
+      "img": "https://watermark.lovepik.com/photo/40008/0007.jpg_wh1200.jpg",
+      "jobslip": "JS12347",
+      "title": "Marketing Campaign",
+      "status": true,
+      "category": "Marketing",
+      "fabricator": "Alice Smith",
+      "clothname": "Linen",
+      "quality": "High",
+      "meter": 40
+    },
+    {
+      "img": "https://watermark.lovepik.com/photo/40008/0007.jpg_wh1200.jpg",
+      "jobslip": "JS12348",
+      "title": "Design Prototype",
+      "status": false,
+      "category": "Design",
+      "fabricator": "Bob Johnson",
+      "clothname": "Polyester",
+      "quality": "Low",
+      "meter": 15
+    },
+    {
+      "img": "https://watermark.lovepik.com/photo/40008/0007.jpg_wh1200.jpg",
+      "jobslip": "JS12349",
+      "title": "Research Analysis",
+      "status": true,
+      "category": "Research",
+      "fabricator": "Charlie Brown",
+      "clothname": "Wool",
+      "quality": "High",
+      "meter": 25
+    },
+    {
+      "img": "https://watermark.lovepik.com/photo/40008/0007.jpg_wh1200.jpg",
+      "jobslip": "JS12350",
+      "title": "Financial Planning",
+      "status": false,
+      "category": "Finance",
+      "fabricator": "David Wilson",
+      "clothname": "Nylon",
+      "quality": "Medium",
+      "meter": 35
+    },
+    {
+      "img": "https://watermark.lovepik.com/photo/40008/0007.jpg_wh1200.jpg",
+      "jobslip": "JS12351",
+      "title": "Customer Support",
+      "status": true,
+      "category": "Support",
+      "fabricator": "Eve Davis",
+      "clothname": "Denim",
+      "quality": "High",
+      "meter": 50
+    },
+    {
+      "img": "https://watermark.lovepik.com/photo/40008/0007.jpg_wh1200.jpg",
+      "jobslip": "JS12352",
+      "title": "Product Launch",
+      "status": false,
+      "category": "Product",
+      "fabricator": "Frank Miller",
+      "clothname": "Rayon",
+      "quality": "Low",
+      "meter": 10
+    },
+    {
+      "img": "https://watermark.lovepik.com/photo/40008/0007.jpg_wh1200.jpg",
+      "jobslip": "JS12353",
+      "title": "Event Management",
+      "status": true,
+      "category": "Event",
+      "fabricator": "Grace Lee",
+      "clothname": "Silk",
+      "quality": "High",
+      "meter": 45
+    },
+    {
+      "img": "https://watermark.lovepik.com/photo/40008/0007.jpg_wh1200.jpg",
+      "jobslip": "JS12354",
+      "title": "Quality Assurance",
+      "status": false,
+      "category": "Quality",
+      "fabricator": "Henry White",
+      "clothname": "Cotton",
+      "quality": "Medium",
+      "meter": 20
+    }
+  ]
+  
