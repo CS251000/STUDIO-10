@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import Select from 'react-tailwindcss-select';
 import QuantityModal from './Quantity';
 import ExpenseModal from './ExpenseModal';
+import { db,storage} from '../firebaseConfig';
+import { collection, addDoc } from "firebase/firestore";  
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+
+
 
 
 export default function AddItem() {
@@ -54,6 +59,7 @@ export default function AddItem() {
         packingCharge: '',
         quantities: [],
         expenses: [],
+        imageUrl:''
     });
 
     const [isQuantityModalOpen, setIsQuantityModalOpen] = useState(false);
@@ -87,6 +93,35 @@ export default function AddItem() {
             status: !prevProduct.status
         }));
     };
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const storageRef = ref(storage, `images/${file.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        uploadTask.on('state_changed',
+            (snapshot) => {
+                // Progress function
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+            },
+            (error) => {
+                // Error function
+                console.error('Error uploading image: ', error);
+            },
+            () => {
+                // Completion function
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    console.log('File available at', downloadURL);
+                    setProduct((prevProduct) => ({
+                        ...prevProduct,
+                        imageUrl: downloadURL
+                    }));
+                });
+            }
+        );
+    };
 
     const handleQuantitySave = (quantities) => {
         setProduct((prevProduct) => ({
@@ -102,9 +137,20 @@ export default function AddItem() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(product);
+
+        try {
+            // Add the product to Firestore with the image URL
+            const docRef = await addDoc(collection(db, 'products'), {
+                ...product
+            });
+
+            console.log('Document written with ID: ', docRef.id);
+            
+        } catch (error) {
+            console.error('Error adding document: ', error);
+        }
     };
 
     const totalQuantity = product.quantities.reduce((acc, qty) => acc + qty, 0);
@@ -126,6 +172,7 @@ export default function AddItem() {
                             className="relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none"
                             type="file"
                             id="formFile"
+                            onChange={handleImageChange}
                         />
                     </div>
 
@@ -167,7 +214,7 @@ export default function AddItem() {
                             </label>
                         </div>
                         <div className="w-full">
-                            <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900">Select an option</label>
+                            <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900">Category: </label>
                             <Select
                                 name="category"
                                 id="category"

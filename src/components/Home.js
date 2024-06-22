@@ -1,27 +1,56 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from './Card';
-import data from '../data/temp.json'; // Adjust the path if necessary
-// import { Link } from 'react-router-dom';
+import { db } from '../firebaseConfig'; 
+import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
 
 export default function Home() {
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const querySnapshot = await getDocs(collection(db, 'products'));
+                const products = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setData(products);
+            } catch (error) {
+                console.error('Error fetching data: ', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const handleDelete = async (id) => {
+        const confirmed = window.confirm("Are you sure you want to delete this item?");
+        if (confirmed) {
+            try {
+                await deleteDoc(doc(db, 'products', id));
+                setData(prevData => prevData.filter(item => item.id !== id));
+            } catch (error) {
+                console.error('Error deleting document: ', error);
+            }
+        }
+    };
+
     return (
         <div className="container mx-auto px-4 mt-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {data.map((card, index) => (
-                    
+                {data.map((card) => (
                     <Card
-                        key={index}
-                        img={card.img}
+                        key={card.id}
+                        id={card.id}
+                        img={card.imageUrl} // Display image URL
                         jobslip={card.jobslip}
-                        itemName={card.title}
+                        itemName={card.itemName}
                         status={card.status}
                         category={card.category}
                         fabricator={card.fabricator}
-                        clothname={card.clothname}
-                        quality={card.quality}
+                        clothname={card.clothName}
+                        quality={card.clothQuality}
                         meter={card.meter}
+                        purchaserate={card.purchaseRate}
+                        onDelete={handleDelete}
                     />
-                    
                 ))}
             </div>
         </div>
