@@ -16,7 +16,9 @@ export default function AddItem() {
         { value: "denim", label: "Denim" },
         { value: "check", label: "Check" },
         { value: "lycra", label: "Lycra" },
-        { value: "kurta", label: "Kurta" }
+        { value: "kurta", label: "Kurta" },
+        { value: "lining", label: "Lining" },
+        
     ];
 
     const sizes = [
