@@ -3,6 +3,9 @@ import Nav from "./components/Nav";
 import Home from "./components/Home";
 import AddItem from "./components/AddItem";
 import CardDetails from "./components/CardDetails";
+import Reordered from "./components/Reordered";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
 
 
 const Layout = () => (
@@ -24,6 +27,9 @@ const router= createBrowserRouter([
         ]
       },
       {path:"/add",element:<AddItem/>},
+      {path:"/reordered",element:<Reordered/>},
+      {path:'/login',element:<Login/>},
+      {path:'/signup',element:<Signup/>}
       
     ]
   }

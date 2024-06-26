@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 export default function Card({ id, img, jobslip, itemName, status, category, fabricator, clothname, quality, meter, purchaserate, onDelete }) {
   
   return (
-    <div className={`max-w-sm border rounded-lg shadow border-gray-700 ${status ? ' bg-green-500' : 'bg-white'}`}>
+    <div className={`max-w-sm border rounded-lg shadow border-gray-700 ${status ? ' bg-yellow-100' : 'bg-white'}`}>
       
       <img className="rounded-t-lg w-full h-48 object-cover" src={img} alt='itemImage' />
       
