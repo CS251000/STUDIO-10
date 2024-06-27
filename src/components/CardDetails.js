@@ -46,8 +46,11 @@ const CardDetails = () => {
     ? ((1 + margin / 100) * product.sizeWiseRateXXL).toFixed(2)
     : 'N/A';
    
+    const totalExpenses = product.expenses.reduce((acc, value) => acc + (value || 0), 0);
+    console.log(totalExpenses);
+    
+  var ratecost = (Number(product.averagePiece) * Number(product.clothSaleRate) + Number(totalExpenses) + Number(product.fabrication)).toFixed(2);
 
-  // const ratecost= product.averagePiece * product.clothSaleRate + product.
 
   return (
     <div className={`max-w-4xl mx-auto my-8 p-4 ${product.status===true?'bg-yellow-100':'bg-white'}  shadow-md 
@@ -107,6 +110,11 @@ const CardDetails = () => {
             <div className="w-full sm:w-1/2 mb-4">
               <span className="font-bold">Fabrication Cost:</span> {product.fabrication}
             </div>
+            <div className="w-full sm:w-1/2 mb-4">
+              <span className="font-bold">Rate Costing:</span> 
+              {ratecost}
+            </div>
+
             <div className="w-full sm:w-1/2 mb-4">
               <span className="font-bold">Margin:</span> {product.margin}
             </div>
