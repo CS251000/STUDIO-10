@@ -47,7 +47,6 @@ const CardDetails = () => {
     : 'N/A';
    
     const totalExpenses = product.expenses.reduce((acc, value) => acc + (value || 0), 0);
-    console.log(totalExpenses);
     
   var ratecost = (Number(product.averagePiece) * Number(product.clothSaleRate) + Number(totalExpenses) + Number(product.fabrication)).toFixed(2);
 

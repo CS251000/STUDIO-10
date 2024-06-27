@@ -9,15 +9,19 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import ProtectedRoute from './components/ProtectedRouter';
 import { AuthProvider } from "./hooks/useAuth";
+import Footer from './components/Footer';
 
 const Layout = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Nav onSearch={setSearchQuery} />
-      <Outlet context={{ searchQuery }} />
-    </>
+      <main className="flex-grow">
+        <Outlet context={{ searchQuery }} />
+      </main>
+      <Footer />
+    </div>
   );
 };
 

@@ -1,27 +1,31 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth  } from '../firebaseConfig';
-
+import { auth } from '../firebaseConfig';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const navigate= useNavigate();
+  const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    createUserWithEmailAndPassword(auth,email,password)
-    .then((userCredential)=>{
+    setError(null); // Reset error before attempting to sign up
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
         console.log(userCredential);
         navigate('/login');
-    }).catch((err)=>{
-        console.log(err);
-        
-    })
-
-     
+      })
+      .catch((err) => {
+        if (err.code === 'auth/email-already-in-use') {
+          setError('Email already in use. Please use a different email.');
+        } else {
+          setError('Failed to sign up. Please try again.');
+        }
+        setEmail('');
+        setPassword('');
+      });
   };
 
   return (
