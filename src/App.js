@@ -8,6 +8,7 @@ import Reordered from "./components/Reordered";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 
+
 const Layout = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -24,12 +25,13 @@ const router = createBrowserRouter([
     path: "/",
     element: <Layout />,
     children: [
-      { index: true, element: <Home /> },
+      { index: true, element: <Home/> },
       { path: "/:itemId", element: <CardDetails /> },
       { path: "add", element: <AddItem /> },
       { path: "reordered", element: <Reordered /> },
       { path: "login", element: <Login /> },
       { path: "signup", element: <Signup /> }
+
     ]
   }
 ]);

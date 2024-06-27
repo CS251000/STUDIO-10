@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth  } from '../firebaseConfig';
 
@@ -8,15 +8,19 @@ const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const navigate= useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
     createUserWithEmailAndPassword(auth,email,password)
     .then((userCredential)=>{
         console.log(userCredential);
+        navigate('/login');
     }).catch((err)=>{
         console.log(err);
+        
     })
+
      
   };
 

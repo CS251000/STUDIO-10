@@ -1,11 +1,26 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'; // Import Firebase auth methods
 
 export default function Nav({ onSearch }) {
   const [searchVisible, setSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [user, setUser] = useState(null); // State to track the user
+
+  const auth = getAuth();
+  const navigate= useNavigate();
+
+  useEffect(() => {
+    // Set up a Firebase auth state observer and get user data
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    // Clean up the subscription
+    return () => unsubscribe();
+  }, [auth]);
 
   const handleSearchIconClick = () => {
     setSearchVisible(!searchVisible);
@@ -15,6 +30,20 @@ export default function Nav({ onSearch }) {
     const query = e.target.value;
     setSearchQuery(query);
     onSearch(query); // Pass the search query to the parent component
+  };
+
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful
+        setUser(null);
+        navigate('/login');
+        
+      })
+      .catch((error) => {
+        // An error happened
+        console.error('Error signing out: ', error);
+      });
   };
 
   return (
@@ -59,11 +88,20 @@ export default function Nav({ onSearch }) {
                 Reordered Items
               </button>
             </Link>
-            <Link to="/login">
-              <button className="inline-flex items-center bg-slate-700 hover:bg-slate-500 border-0 py-1 px-3 focus:outline-none rounded text-base text-white">
-                Login
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className="inline-flex items-center bg-slate-700 hover:bg-slate-500 border-0 py-1 px-3 focus:outline-none rounded text-base text-white text-center w-[80px]"
+              >
+                Logout
               </button>
-            </Link>
+            ) : (
+              <Link to="/login">
+                <button className="inline-flex items-center bg-slate-700 hover:bg-slate-500 border-0 py-1 px-3 focus:outline-none rounded text-base text-white w-[80px]">
+                  Login
+                </button>
+              </Link>
+            )}
           </div>
         </div>
       </header>

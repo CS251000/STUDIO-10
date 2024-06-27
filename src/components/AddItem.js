@@ -5,6 +5,7 @@ import ExpenseModal from './ExpenseModal';
 import { db,storage} from '../firebaseConfig';
 import { collection, addDoc } from "firebase/firestore";  
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -127,6 +128,7 @@ export default function AddItem() {
             }
         );
     };
+    const navigate= useNavigate();
 
     const handleQuantitySave = (quantities) => {
         setProduct((prevProduct) => ({
@@ -152,7 +154,7 @@ export default function AddItem() {
             });
 
             console.log('Document written with ID: ', docRef.id);
-            window.location.href='/';
+            navigate('/');
             
         } catch (error) {
             console.error('Error adding document: ', error);

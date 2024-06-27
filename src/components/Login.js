@@ -1,21 +1,29 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebaseConfig';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from 'firebase/auth';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    signInWithEmailAndPassword(auth,email,password)
-    .then((userCredential)=>{
-        console.log(userCredential);
-    }).catch((err)=>{
-        console.log(err);
-    });
-    window.location.href="/";
+
+    try {
+      // Set persistence to local (default)
+      await setPersistence(auth, browserLocalPersistence);
+
+      // Sign in with email and password
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.log(userCredential);
+
+      // Navigate to home page after successful login
+      navigate('/');
+    } catch (error) {
+      console.error('Error signing in:', error);
+    }
   };
 
   return (
@@ -68,4 +76,3 @@ const Login = () => {
 };
 
 export default Login;
-  
