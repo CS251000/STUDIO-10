@@ -21,7 +21,7 @@ export default function AddItem() {
         
     ];
 
-    const sizes = [
+     const sizes = [
         { value: 's', label: "S" },
         { value: 'm', label: "M" },
         { value: 'l', label: "L" },
@@ -38,7 +38,6 @@ export default function AddItem() {
         { value: 'print', label: 'Print' },
         { value: 'id', label: 'ID' },
         { value: 'double-pocket', label: 'Double Pocket' },
-        
     ];
 
     const [product, setProduct] = useState({

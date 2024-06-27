@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from '../firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
+import ExpenseInfo from './ExpenseInfo';
+import QuantityInfo from './QuantityInfo';
 
 
 
@@ -114,6 +116,10 @@ const CardDetails = () => {
             <div className="w-full sm:w-1/2 mb-4">
               <span className="font-bold">Packing Charge:</span> {product.packingCharge}
             </div>
+            <div className="flex flex-row justify-center items-center gap-5 mb-2">
+            <ExpenseInfo expensesvalue={product.expenses}/>
+            <QuantityInfo selectedSizes={product.sizes} selectedQuantities={product.quantities}/>
+            </div>
             <div className="flex flex-col xl:flex-row space-y-4 xl:space-y-0 xl:space-x-6 border border-black p-2 w-full mb-2">
               
               <h3 className="text-lg font-extrabold text-gray-900 mb-1 xl:mb-0 xl:mr-4">Size Wise Rates</h3>
@@ -128,7 +134,7 @@ const CardDetails = () => {
             </div>
 
             </div>
-            <div className="flex flex-col xl:flex-row space-y-4 xl:space-y-0 xl:space-x-6 border border-black p-2 bg-yellow-300 w-full">
+            <div className="flex flex-col xl:flex-row space-y-4 xl:space-y-0 xl:space-x-6 border border-black p-2 bg-yellow-300 w-full mb-2">
               
               <h3 className="text-lg font-extrabold text-gray-900 mb-1 xl:mb-0 xl:mr-4">Size Wise SALE rates</h3>
               <div className="w-full sm:w-1/2 mb-4">
@@ -142,6 +148,7 @@ const CardDetails = () => {
             </div>
 
             </div>
+            
           </div>
           
          
