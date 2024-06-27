@@ -61,7 +61,11 @@ export default function AddItem() {
         packingCharge: '',
         quantities: [],
         expenses: [],
-        imageUrl:''
+        imageUrl:'',
+        sizeWiseRateS:'',
+        sizeWiseRateMLXL:'',
+        sizeWiseRateXXL:'',
+
     });
 
     const [isQuantityModalOpen, setIsQuantityModalOpen] = useState(false);
@@ -401,6 +405,48 @@ export default function AddItem() {
                                 placeholder="Enter packing charge"
                             />
                         </div>
+                        <div className="flex flex-col xl:flex-row space-y-4 xl:space-y-0 xl:space-x-6">
+    <h3 className="text-lg font-medium text-gray-900 mb-4 xl:mb-0 xl:mr-4">Size Wise Rates</h3>
+    <div className="flex flex-col space-y-4">
+        <div>
+            <label htmlFor="sizeWiseRateS" className="block mb-2 text-sm font-medium text-gray-900">S</label>
+            <input
+                type="number"
+                name="sizeWiseRateS"
+                id="sizeWiseRateS"
+                value={product.sizeWiseRateS}
+                onChange={handleChange}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                placeholder="Enter rate..."
+            />
+        </div>
+        <div>
+            <label htmlFor="sizeWiseRateMLXL" className="block mb-2 text-sm font-medium text-gray-900">ML/XL</label>
+            <input
+                type="number"
+                name="sizeWiseRateMLXL"
+                id="sizeWiseRateMLXL"
+                value={product.sizeWiseRateMLXL}
+                onChange={handleChange}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                placeholder="Enter rate..."
+            />
+        </div>
+        <div>
+            <label htmlFor="sizeWiseRateXXL" className="block mb-2 text-sm font-medium text-gray-900">XXL</label>
+            <input
+                type="number"
+                name="sizeWiseRateXXL"
+                id="sizeWiseRateXXL"
+                value={product.sizeWiseRateXXL}
+                onChange={handleChange}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                placeholder="Enter rate..."
+            />
+        </div>
+    </div>
+</div>
+
                     </div>
                     
                     <button

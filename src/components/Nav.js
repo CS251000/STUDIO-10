@@ -1,9 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
-export default function Nav() {
+export default function Nav({ onSearch }) {
+  const [searchVisible, setSearchVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchIconClick = () => {
+    setSearchVisible(!searchVisible);
+  };
+
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    onSearch(query); // Pass the search query to the parent component
+  };
+
   return (
     <div>
       <header className="text-gray-600 body-font border-2">
@@ -12,8 +25,23 @@ export default function Nav() {
             <Link to="/">
               <span className="ml-3 text-3xl bg-blue-600 p-2 focus:outline-none rounded-md">Studio-10</span>
             </Link>
-            <FontAwesomeIcon icon={faSearch} className="ml-4 text-gray-500 text-xl cursor-pointer" />
+            <FontAwesomeIcon
+              icon={faSearch}
+              className="ml-4 text-gray-500 text-xl cursor-pointer"
+              onClick={handleSearchIconClick}
+            />
           </div>
+          {searchVisible && (
+            <div className="w-full md:w-auto md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center mb-4 md:mb-0">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="bg-gray-100 rounded border border-gray-300 focus:outline-none focus:border-blue-500 text-base px-4 py-2"
+                placeholder="Search items..."
+              />
+            </div>
+          )}
           <nav className="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
             {/* Add any additional navigation items here if needed */}
           </nav>

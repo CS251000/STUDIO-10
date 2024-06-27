@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Card({ id, img, jobslip, itemName, status, category, fabricator, clothname, quality, meter, purchaserate, onDelete }) {
+export default function Card({ id, img, jobslip, itemName, status, category, fabricator, clothname, quality, meter, clothPurchaseRate, onDelete }) {
   
   return (
     <div className={`max-w-sm border rounded-lg shadow border-gray-700 ${status ? ' bg-yellow-100' : 'bg-white'}`}>
@@ -30,7 +30,7 @@ export default function Card({ id, img, jobslip, itemName, status, category, fab
           Cloth Meter: {meter}
         </p>
         <p className="mb-3 font-normal text-gray-700">
-          Purchase Rate: {purchaserate}
+          Purchase Rate: {clothPurchaseRate}
         </p>
 
         <div className="flex justify-between">
