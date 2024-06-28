@@ -4,6 +4,7 @@ import { db } from '../firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
 import ExpenseInfo from './ExpenseInfo';
 import QuantityInfo from './QuantityInfo';
+import SwprInfo from './SwprInfo';
 
 
 
@@ -126,6 +127,7 @@ const CardDetails = () => {
             <div className="flex flex-row justify-center items-center gap-5 mb-2">
             <ExpenseInfo expensesvalue={product.expenses}/>
             <QuantityInfo selectedSizes={product.sizes} selectedQuantities={product.quantities}/>
+            <SwprInfo selectedSizes={product.sizes} selectedSwpr={product.swpr}/>
             </div>
             <div className="flex flex-col xl:flex-row space-y-4 xl:space-y-0 xl:space-x-6 border border-black p-2 w-full mb-2">
               

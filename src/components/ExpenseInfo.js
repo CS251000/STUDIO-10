@@ -33,7 +33,7 @@ const ExpenseInfo = ({ expensesvalue }) => {
               {expenses.map((expense, index) => (
                 <li key={index} className="border-b py-2 flex justify-between">
                   <span>{expense.label}:</span>
-                  <span> ₹ {expensesvalue[index].toFixed(2)}</span>
+                  <span> ₹ {(expensesvalue[index] || 0).toFixed(2)}</span>
                 </li>
               ))}
             </ul>

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
-export default function QuantityInfo({ selectedSizes, selectedQuantities }) {
+export default function SwprInfo({ selectedSizes, selectedSwpr }) {
   const sizes = [
     { value: 's', label: "S" },
     { value: 'm', label: "M" },
@@ -9,13 +9,12 @@ export default function QuantityInfo({ selectedSizes, selectedQuantities }) {
     { value: 'xxl', label: "XXL" }
   ];
 
-  const quantitiesMap = sizes.map(size => {
+  const swprmap = sizes.map(size => {
     const index = selectedSizes.indexOf(size.value);
-    return index !== -1 ? selectedQuantities[index] : 0;
+    return index !== -1 ? selectedSwpr[index] : 0;
   });
 
   const [isOpen, setIsOpen] = useState(false);
-  const totalQuantity = quantitiesMap.reduce((acc, value) => acc + (value || 0), 0);
 
   return (
     <div>
@@ -23,18 +22,18 @@ export default function QuantityInfo({ selectedSizes, selectedQuantities }) {
         onClick={() => setIsOpen(true)}
         className="bg-blue-500 text-white px-4 py-2 rounded"
       >
-        Quantities: {totalQuantity.toFixed(0)}
+        SizeWise-Purchase rates
       </button>
 
       {isOpen && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
           <div className="bg-white p-6 rounded shadow-lg w-3/4 max-w-lg">
-            <h2 className="text-xl font-bold mb-4">Quantities</h2>
+            <h2 className="text-xl font-bold mb-4">Size Wise Purchase rates</h2>
             <ul>
               {sizes.map((size, index) => (
                 <li key={index} className="border-b py-2 flex justify-between">
                   <span>{size.label}:</span>
-                  <span>{quantitiesMap[index].toFixed(0)}</span>
+                  <span>₹ {swprmap[index].toFixed(2)}</span>
                 </li>
               ))}
             </ul>

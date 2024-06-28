@@ -65,10 +65,11 @@ export default function AddItem() {
         packingCharge: '',
         quantities: [],
         expenses: [],
+        swpr:[],
         imageUrl:'',
-        sizeWiseRateS:'',
-        sizeWiseRateMLXL:'',
-        sizeWiseRateXXL:'',
+        // sizeWiseRateS:'',
+        // sizeWiseRateMLXL:'',
+        // sizeWiseRateXXL:'',
         createdAt:Timestamp.now(),
     });
     useEffect(() => {
@@ -386,7 +387,7 @@ export default function AddItem() {
                         onClick={() => setIsExpenseModalOpen(true)}
                         className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-blue-500"
                     >
-                        {totalExpenses > 0 ? `Total Expenses: ${totalExpenses}` : 'Add Expenses'}
+                        {totalExpenses !== 0 ? `Total Expenses: ${totalExpenses.toFixed(2)}` : 'Add Expenses'}
                     </button>
                     <button
                             type="button"
@@ -409,7 +410,7 @@ export default function AddItem() {
                             />
                         </div>
                         <div className="w-full">
-                            <label htmlFor="ratecost" className="block mb-2 text-sm font-medium text-gray-900">
+                            <label htmlFor="ratecost" className="block mb-2 text-lg font-extrabold text-gray-900">
                                 Rate Costing : {ratecost} rs.
 
                             </label>
@@ -451,7 +452,7 @@ export default function AddItem() {
                                 placeholder="Enter packing charge"
                             />
                         </div>
-                        <div className="flex flex-col xl:flex-row space-y-4 xl:space-y-0 xl:space-x-6">
+                        {/* <div className="flex flex-col xl:flex-row space-y-4 xl:space-y-0 xl:space-x-6">
     <h3 className="text-lg font-medium text-gray-900 mb-4 xl:mb-0 xl:mr-4">Size Wise Rates</h3>
     <div className="flex flex-col space-y-4">
         <div>
@@ -491,7 +492,7 @@ export default function AddItem() {
             />
         </div>
     </div>
-</div>
+</div> */}
 
                     </div>
                     
