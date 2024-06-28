@@ -1,27 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import Card from './Card';
-import { db } from '../firebaseConfig';
-import { collection, getDocs, doc, deleteDoc, query, orderBy } from 'firebase/firestore';
+import { db, auth } from '../firebaseConfig';
+import { collection, getDocs, doc, deleteDoc, query, orderBy, where } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
 
 export default function Home() {
   const { searchQuery } = useOutletContext();
   const [data, setData] = useState([]);
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+      } else {
+        setUserId(null);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
-        const querySnapshot = await getDocs(q);
-        const products = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setData(products);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
+      if (userId) {
+        try {
+          const q = query(
+            collection(db, 'products'),
+            where('user', '==', userId),
+            orderBy('createdAt', 'desc')
+          );
+          const querySnapshot = await getDocs(q);
+          const products = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          setData(products);
+        } catch (error) {
+          console.error('Error fetching data: ', error);
+        }
       }
     };
 
     fetchData();
-  }, []);
+  }, [userId]);
 
   const handleDelete = async (id) => {
     const confirmed = window.confirm("Are you sure you want to delete this item?");

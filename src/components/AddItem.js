@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Select from 'react-tailwindcss-select';
 import QuantityModal from './Quantity';
 import ExpenseModal from './ExpenseModal';
@@ -7,6 +7,8 @@ import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
 import SwprModal from './SWPR';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
 
 
 
@@ -41,6 +43,7 @@ export default function AddItem() {
         { value: 'id', label: 'ID' },
         { value: 'double-pocket', label: 'Double Pocket' },
     ];
+    const [userId, setUserId] = useState(null);
 
     const [product, setProduct] = useState({
         itemName: '',
@@ -66,10 +69,24 @@ export default function AddItem() {
         sizeWiseRateS:'',
         sizeWiseRateMLXL:'',
         sizeWiseRateXXL:'',
-        createdAt:Timestamp.now()
-        
-
+        createdAt:Timestamp.now(),
     });
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUserId(user.uid);
+            }
+        });
+    }, []);
+
+    useEffect(() => {
+        if (userId) {
+            setProduct((prevProduct) => ({
+                ...prevProduct,
+                user: userId
+            }));
+        }
+    }, [userId]);
     
 
     const [isQuantityModalOpen, setIsQuantityModalOpen] = useState(false);
@@ -331,7 +348,7 @@ export default function AddItem() {
                                 placeholder="Enter cloth sale rate"
                             />
                         </div>
-                        <div className9ol="w-full">
+                        <div className="w-full">
                             <label htmlFor="averagePiece" className="block mb-2 text-sm font-medium text-gray-900">Average Piece</label>
                             <input
                                 type="number"

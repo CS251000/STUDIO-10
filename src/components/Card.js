@@ -15,7 +15,7 @@ export default function Card({ id, img, jobslip, itemName, status, category, fab
         <h6 className="mb-2 text-2xl font-bold tracking-tight text-black text-center">{itemName}</h6>
 
         <p className="mb-3 font-normal text-gray-700">
-          Category: {category}
+          Category: {category.join(' , ')}
         </p>
         <p className="mb-3 font-normal text-gray-700">
           Fabricator: {fabricator}

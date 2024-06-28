@@ -33,17 +33,19 @@ export default function Nav({ onSearch }) {
   };
 
   const handleLogout = () => {
+    const conf = window.confirm("Are you sure you want to Logout");
+    if (conf){
     signOut(auth)
       .then(() => {
         // Sign-out successful
         setUser(null);
         navigate('/login');
-        
       })
       .catch((error) => {
         // An error happened
         console.error('Error signing out: ', error);
       });
+    }
   };
 
   return (
