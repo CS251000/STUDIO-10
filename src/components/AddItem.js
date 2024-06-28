@@ -3,9 +3,10 @@ import Select from 'react-tailwindcss-select';
 import QuantityModal from './Quantity';
 import ExpenseModal from './ExpenseModal';
 import { db,storage} from '../firebaseConfig';
-import { collection, addDoc } from "firebase/firestore";  
+import { collection, addDoc, Timestamp } from "firebase/firestore";  
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
+import SwprModal from './SWPR';
 
 
 
@@ -56,7 +57,7 @@ export default function AddItem() {
         averagePiece: '',
         mrp: '',
         fabrication: '',
-        margin: '',
+        // margin: '',
         discount: '',
         packingCharge: '',
         quantities: [],
@@ -65,11 +66,15 @@ export default function AddItem() {
         sizeWiseRateS:'',
         sizeWiseRateMLXL:'',
         sizeWiseRateXXL:'',
+        createdAt:Timestamp.now()
+        
 
     });
+    
 
     const [isQuantityModalOpen, setIsQuantityModalOpen] = useState(false);
     const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
+    const [isSWPRModalOpen, setIsSwprModalOpen] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -136,6 +141,12 @@ export default function AddItem() {
             quantities
         }));
     };
+    const handleSwprSave = (swprValues) => {
+        setProduct((prevProduct) => ({
+            ...prevProduct,
+            swpr: swprValues
+        }));
+    };
 
     const handleExpenseSave = (expenseValues) => {
         setProduct((prevProduct) => ({
@@ -143,6 +154,7 @@ export default function AddItem() {
             expenses: expenseValues
         }));
     };
+  
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -164,6 +176,7 @@ export default function AddItem() {
 
     const totalQuantity = product.quantities.reduce((acc, qty) => acc + qty, 0);
     const totalExpenses = product.expenses.reduce((acc, expense) => acc + expense, 0);
+    var ratecost = (Number(product.averagePiece) * Number(product.clothSaleRate) + Number(totalExpenses) + Number(product.fabrication)).toFixed(2);
 
     return (
         <section className="bg-white">
@@ -208,6 +221,18 @@ export default function AddItem() {
                                 onChange={handleChange}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="Enter Value..."
+                            />
+                        </div>
+                        <div className="w-full">
+                            <label htmlFor="fabricator" className="block mb-2 text-sm font-medium text-gray-900">Fabricator</label>
+                            <input
+                                type="text"
+                                name="fabricator"
+                                id="fabricator"
+                                value={product.fabricator}
+                                onChange={handleChange}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                placeholder="Enter value..."
                             />
                         </div>
                         <div className="w-full">
@@ -306,7 +331,7 @@ export default function AddItem() {
                                 placeholder="Enter cloth sale rate"
                             />
                         </div>
-                        <div className="w-full">
+                        <div className9ol="w-full">
                             <label htmlFor="averagePiece" className="block mb-2 text-sm font-medium text-gray-900">Average Piece</label>
                             <input
                                 type="number"
@@ -330,19 +355,8 @@ export default function AddItem() {
                                 placeholder="Enter MRP"
                             />
                         </div>
-                        <div className="w-full">
-                            <label htmlFor="fabricator" className="block mb-2 text-sm font-medium text-gray-900">Fabricator</label>
-                            <input
-                                type="text"
-                                name="fabricator"
-                                id="fabricator"
-                                value={product.fabricator}
-                                onChange={handleChange}
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                                placeholder="Enter value..."
-                            />
-                        </div>
-                        <div className='flex justify-around'>
+                        
+                        <div className='flex justify-around gap-2'>
                     <button
                         type="button"
                         onClick={() => setIsQuantityModalOpen(true)}
@@ -357,6 +371,13 @@ export default function AddItem() {
                     >
                         {totalExpenses > 0 ? `Total Expenses: ${totalExpenses}` : 'Add Expenses'}
                     </button>
+                    <button
+                            type="button"
+                            className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-blue-500"
+                            onClick={() => setIsSwprModalOpen(true)} 
+                        >
+                            Add SWPR
+                        </button>
                     </div>
                         <div className="w-full">
                             <label htmlFor="fabrication" className="block mb-2 text-sm font-medium text-gray-900">Fabrication</label>
@@ -371,7 +392,14 @@ export default function AddItem() {
                             />
                         </div>
                         <div className="w-full">
-                            <label htmlFor="margin" className="block mb-2 text-sm font-medium text-gray-900">Margin</label>
+                            <label htmlFor="ratecost" className="block mb-2 text-sm font-medium text-gray-900">
+                                Rate Costing : {ratecost} rs.
+
+                            </label>
+                            
+                        </div>
+                        {/* <div className="w-full">
+                            <label htmlFor="margin" className="block mb-2 text-sm font-bold text-gray-900">Margin</label>
                             <input
                                 type="number"
                                 name="margin"
@@ -381,7 +409,7 @@ export default function AddItem() {
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="Enter margin percentage"
                             />
-                        </div>
+                        </div> */}
                         <div className="w-full">
                             <label htmlFor="discount" className="block mb-2 text-sm font-medium text-gray-900">Discount</label>
                             <input
@@ -470,6 +498,13 @@ export default function AddItem() {
                 expenses={expenses}
                 onSave={handleExpenseSave}
             />
+            <SwprModal
+            isOpen={isSWPRModalOpen}
+            onClose={()=>setIsSwprModalOpen(false)}
+            sizes={sizes.filter(size => product.sizes.includes(size.value))}
+            onSave={handleSwprSave}
+            />
+
         </section>
     );
 }

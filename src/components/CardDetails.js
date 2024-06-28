@@ -114,9 +114,9 @@ const CardDetails = () => {
               {ratecost}
             </div>
 
-            <div className="w-full sm:w-1/2 mb-4">
+            {/* <div className="w-full sm:w-1/2 mb-4">
               <span className="font-bold">Margin:</span> {product.margin}
-            </div>
+            </div> */}
             <div className="w-full sm:w-1/2 mb-4">
               <span className="font-bold">Discount:</span> {product.discount}
             </div>

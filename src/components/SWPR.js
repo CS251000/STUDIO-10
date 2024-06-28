@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 
-const ExpenseModal = ({ isOpen, onClose, expenses, onSave }) => {
-    const [expenseValues, setExpenseValues] = useState(expenses.map(() => ''));
+const SwprModal = ({ isOpen, onClose, sizes, onSave }) => {
+    const [swpr, setSwpr] = useState(sizes.map(() => 0));
 
-    const handleExpenseChange = (index, value) => {
-        const updatedExpenses = [...expenseValues];
-        updatedExpenses[index] = value;
-        setExpenseValues(updatedExpenses);
+    const handleSwprChange = (index, value) => {
+        const updatedSwpr = [...swpr];
+        updatedSwpr[index] = Number(value);
+        setSwpr(updatedSwpr);
     };
 
     const handleSave = () => {
-        const numericExpenses = expenseValues.map(value => value !== '' ? Number(value) : 0);
-        onSave(numericExpenses);
+        onSave(swpr);
         onClose();
     };
 
@@ -20,16 +19,16 @@ const ExpenseModal = ({ isOpen, onClose, expenses, onSave }) => {
     return (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
             <div className="bg-white p-4 rounded-lg shadow-lg">
-                <h2 className="text-lg font-bold mb-4">Enter Expenses</h2>
-                {expenses.map((expense, index) => (
+                <h2 className="text-lg font-bold mb-4">Enter Size Wise Purchase Rates</h2>
+                {sizes.map((size, index) => (
                     <div key={index} className="mb-2">
                         <label className="block text-sm font-medium text-gray-700">
-                            {expense.label}
+                            {size.label}
                         </label>
                         <input
                             type="number"
-                            value={expenseValues[index]}
-                            onChange={(e) => handleExpenseChange(index, e.target.value)}
+                            value={swpr[index]}
+                            onChange={(e) => handleSwprChange(index, e.target.value)}
                             className="mt-1 p-2 border border-gray-300 rounded-md w-full"
                         />
                     </div>
@@ -53,4 +52,4 @@ const ExpenseModal = ({ isOpen, onClose, expenses, onSave }) => {
     );
 };
 
-export default ExpenseModal;
+export default SwprModal;
