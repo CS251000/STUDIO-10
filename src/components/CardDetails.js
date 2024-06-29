@@ -129,7 +129,7 @@ const CardDetails = () => {
             <QuantityInfo selectedSizes={product.sizes} selectedQuantities={product.quantities}/>
             <SwprInfo selectedSizes={product.sizes} selectedSwpr={product.swpr}/>
             </div>
-            <div className="flex flex-col xl:flex-row space-y-4 xl:space-y-0 xl:space-x-6 border border-black p-2 w-full mb-2">
+            {/*<div className="flex flex-col xl:flex-row space-y-4 xl:space-y-0 xl:space-x-6 border border-black p-2 w-full mb-2">
               
               <h3 className="text-lg font-extrabold text-gray-900 mb-1 xl:mb-0 xl:mr-4">Size Wise Rates</h3>
               <div className="w-full sm:w-1/2 mb-4">
@@ -142,7 +142,7 @@ const CardDetails = () => {
               <span className="font-bold">XXL:</span> {product.sizeWiseRateXXL}
             </div>
 
-            </div>
+            </div>*/}
             <div className="flex flex-col xl:flex-row space-y-4 xl:space-y-0 xl:space-x-6 border border-black p-2 bg-yellow-300 w-full mb-2">
               
               <h3 className="text-lg font-extrabold text-gray-900 mb-1 xl:mb-0 xl:mr-4">Size Wise SALE rates</h3>
