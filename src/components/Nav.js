@@ -29,7 +29,7 @@ export default function Nav({ onSearch }) {
   const handleSearchChange = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
-    onSearch(query); // Pass the search query to the parent component
+    onSearch(query); 
   };
 
   const handleLogout = () => {

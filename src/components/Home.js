@@ -54,7 +54,11 @@ export default function Home() {
   };
 
   const filteredData = data.filter(item =>
-    item.itemName.toLowerCase().includes(searchQuery.toLowerCase())
+    item.itemName.toLowerCase().includes(searchQuery.toLowerCase())||
+    item.fabricator.toLowerCase().includes(searchQuery.toLowerCase())||
+    item.jobslip.toLowerCase().includes(searchQuery.toLowerCase())||
+    item.clothName.toLowerCase().includes(searchQuery.toLowerCase())||
+    item.clothQuality.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (

@@ -10,6 +10,7 @@ const ExpenseInfo = ({ expensesvalue }) => {
     { value: 'print', label: 'Print' },
     { value: 'id', label: 'ID' },
     { value: 'double-pocket', label: 'Double Pocket' },
+    {value:'others',label:'Others'},
   ];
 
   const [isOpen, setIsOpen] = useState(false);

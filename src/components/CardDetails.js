@@ -59,7 +59,7 @@ const CardDetails = () => {
     }
     np/=product.swsr.length.toFixed(2);
     
-    const cp= product.clothSaleRate - product.clothPurchaseRate;
+    const cp= product.clothSaleRate - product.clothPurchaseRate-2;
 
 
   return (

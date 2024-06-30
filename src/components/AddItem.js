@@ -43,6 +43,7 @@ export default function AddItem() {
         { value: 'print', label: 'Print' },
         { value: 'id', label: 'ID' },
         { value: 'double-pocket', label: 'Double Pocket' },
+        {value:'others',label:'Others'},
     ];
     const [userId, setUserId] = useState(null);
 
@@ -212,7 +213,7 @@ export default function AddItem() {
     }
     np/=product.swsr.length.toFixed(2);
     
-     const cp= product.clothSaleRate - product.clothPurchaseRate;
+     const cp= product.clothSaleRate - product.clothPurchaseRate-2;
 
     return (
         <section className="bg-white">
