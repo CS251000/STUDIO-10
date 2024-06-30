@@ -204,11 +204,14 @@ export default function AddItem() {
     const totalQuantity = product.quantities.reduce((acc, qty) => acc + qty, 0);
     const totalExpenses = product.expenses.reduce((acc, expense) => acc + expense, 0);
     var ratecost = (Number(product.averagePiece) * Number(product.clothSaleRate) + Number(totalExpenses) + Number(product.fabrication)).toFixed(2);
+
     var np=0;
+
     for(let i=0;i<product.swsr.length;i++){
-        np+= (product.swsr[i] - product.swpr[i]-product.packingCharge)*(1-(0.01*product.discount));
+        np+= (product.swsr[i]*(1-(0.01*product.discount)) - product.swpr[i]-product.packingCharge);
     }
-    np/=product.swsr.length;
+    np/=product.swsr.length.toFixed(2);
+    
      const cp= product.clothSaleRate - product.clothPurchaseRate;
 
     return (
@@ -520,7 +523,7 @@ export default function AddItem() {
                             />
                         </div>
                         <div className="w-full mt-5">
-                            <label className="block mb-2 text-lg font-bold text-gray-900">Net Proifit: ₹ {isNaN(np)?0:np}</label>
+                            <label className="block mb-2 text-lg font-bold text-gray-900">Net Profit: ₹ {isNaN(np)?0:np}</label>
                         </div>
                         <div className="w-full my-2">
                             <label className="block mb-2 text-lg font-bold text-gray-900">Cloth Proifit: ₹ {cp}</label>

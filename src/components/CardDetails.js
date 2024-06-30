@@ -52,6 +52,15 @@ const CardDetails = () => {
     
   var ratecost = (Number(product.averagePiece) * Number(product.clothSaleRate) + Number(totalExpenses) + Number(product.fabrication)).toFixed(2);
 
+  var np=0;
+
+    for(let i=0;i<product.swsr.length;i++){
+        np+= (product.swsr[i]*(1-(0.01*product.discount)) - product.swpr[i]-product.packingCharge);
+    }
+    np/=product.swsr.length.toFixed(2);
+    
+    const cp= product.clothSaleRate - product.clothPurchaseRate;
+
 
   return (
     <div className={`max-w-4xl mx-auto my-8 p-4 ${product.status===true?'bg-yellow-100':'bg-white'}  shadow-md 
@@ -124,6 +133,12 @@ const CardDetails = () => {
             </div>
             <div className="w-full sm:w-1/2 mb-4">
               <span className="font-bold">Packing Charge:</span> {product.packingCharge}
+            </div>
+            <div className="w-full sm:w-1/2 mb-4">
+              <span className="font-bold">Net Profit: {np}</span> 
+            </div>
+            <div className="w-full sm:w-1/2 mb-4">
+              <span className="font-bold">Cloth Profit: {cp}</span> 
             </div>
             <div className="flex flex-row justify-center items-center gap-5 mb-2">
             <ExpenseInfo expensesvalue={product.expenses}/>
