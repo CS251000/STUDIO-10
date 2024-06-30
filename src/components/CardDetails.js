@@ -5,6 +5,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import ExpenseInfo from './ExpenseInfo';
 import QuantityInfo from './QuantityInfo';
 import SwprInfo from './SwprInfo';
+import SwsrInfo from './Swsrinfo';
 
 
 
@@ -35,17 +36,17 @@ const CardDetails = () => {
   if (!product) {
     return <div>No product found</div>;
   }
-  const margin = product.margin || 0;
+  // const margin = product.margin || 0;
 
-  const salerateS = product.sizeWiseRateS
-    ? ((1 + margin / 100) * product.sizeWiseRateS).toFixed(2)
-    : 'N/A';
-  const salerateMLXL = product.sizeWiseRateMLXL
-    ? ((1 + margin / 100) * product.sizeWiseRateMLXL).toFixed(2)
-    : 'N/A';
-  const salerateXXL = product.sizeWiseRateXXL
-    ? ((1 + margin / 100) * product.sizeWiseRateXXL).toFixed(2)
-    : 'N/A';
+  // const salerateS = product.sizeWiseRateS
+  //   ? ((1 + margin / 100) * product.sizeWiseRateS).toFixed(2)
+  //   : 'N/A';
+  // const salerateMLXL = product.sizeWiseRateMLXL
+  //   ? ((1 + margin / 100) * product.sizeWiseRateMLXL).toFixed(2)
+  //   : 'N/A';
+  // const salerateXXL = product.sizeWiseRateXXL
+  //   ? ((1 + margin / 100) * product.sizeWiseRateXXL).toFixed(2)
+  //   : 'N/A';
    
     const totalExpenses = product.expenses.reduce((acc, value) => acc + (value || 0), 0);
     
@@ -128,6 +129,7 @@ const CardDetails = () => {
             <ExpenseInfo expensesvalue={product.expenses}/>
             <QuantityInfo selectedSizes={product.sizes} selectedQuantities={product.quantities}/>
             <SwprInfo selectedSizes={product.sizes} selectedSwpr={product.swpr}/>
+            <SwsrInfo selectedSizes={product.sizes} selectedSwsr={product.swsr}/>
             </div>
             {/*<div className="flex flex-col xl:flex-row space-y-4 xl:space-y-0 xl:space-x-6 border border-black p-2 w-full mb-2">
               
@@ -143,7 +145,7 @@ const CardDetails = () => {
             </div>
 
             </div>*/}
-            <div className="flex flex-col xl:flex-row space-y-4 xl:space-y-0 xl:space-x-6 border border-black p-2 bg-yellow-300 w-full mb-2">
+            {/* <div className="flex flex-col xl:flex-row space-y-4 xl:space-y-0 xl:space-x-6 border border-black p-2 bg-yellow-300 w-full mb-2">
               
               <h3 className="text-lg font-extrabold text-gray-900 mb-1 xl:mb-0 xl:mr-4">Size Wise SALE rates</h3>
               <div className="w-full sm:w-1/2 mb-4">
@@ -156,7 +158,7 @@ const CardDetails = () => {
               <span className="font-bold">XXL:</span> {salerateXXL}
             </div>
 
-            </div>
+            </div> */}
             
           </div>
           

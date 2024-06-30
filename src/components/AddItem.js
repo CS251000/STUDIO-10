@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import SwprModal from './SWPR';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
+import SwsrModal from './SWSR';
 
 
 
@@ -66,6 +67,7 @@ export default function AddItem() {
         quantities: [],
         expenses: [],
         swpr:[],
+        swsr:[],
         imageUrl:'',
         // sizeWiseRateS:'',
         // sizeWiseRateMLXL:'',
@@ -93,6 +95,7 @@ export default function AddItem() {
     const [isQuantityModalOpen, setIsQuantityModalOpen] = useState(false);
     const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
     const [isSWPRModalOpen, setIsSwprModalOpen] = useState(false);
+    const [isSWSRModalOpen, setIsSwsrModalOpen] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -165,6 +168,12 @@ export default function AddItem() {
             swpr: swprValues
         }));
     };
+    const handleSwsrSave = (swsrValues) => {
+        setProduct((prevProduct) => ({
+            ...prevProduct,
+            swsr: swsrValues
+        }));
+    };
 
     const handleExpenseSave = (expenseValues) => {
         setProduct((prevProduct) => ({
@@ -195,6 +204,12 @@ export default function AddItem() {
     const totalQuantity = product.quantities.reduce((acc, qty) => acc + qty, 0);
     const totalExpenses = product.expenses.reduce((acc, expense) => acc + expense, 0);
     var ratecost = (Number(product.averagePiece) * Number(product.clothSaleRate) + Number(totalExpenses) + Number(product.fabrication)).toFixed(2);
+    var np=0;
+    for(let i=0;i<product.swsr.length;i++){
+        np+= (product.swsr[i] - product.swpr[i]-product.packingCharge)*(1-(0.01*product.discount));
+    }
+    np/=product.swsr.length;
+     const cp= product.clothSaleRate - product.clothPurchaseRate;
 
     return (
         <section className="bg-white">
@@ -361,18 +376,7 @@ export default function AddItem() {
                                 placeholder="Enter average piece"
                             />
                         </div>
-                        <div className="w-full">
-                            <label htmlFor="mrp" className="block mb-2 text-sm font-medium text-gray-900">MRP</label>
-                            <input
-                                type="number"
-                                name="mrp"
-                                id="mrp"
-                                value={product.mrp}
-                                onChange={handleChange}
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                                placeholder="Enter MRP"
-                            />
-                        </div>
+                       
                         
                         <div className='flex justify-around gap-2'>
                     <button
@@ -411,7 +415,7 @@ export default function AddItem() {
                         </div>
                         <div className="w-full">
                             <label htmlFor="ratecost" className="block mb-2 text-lg font-extrabold text-gray-900">
-                                Rate Costing : {ratecost} rs.
+                                Rate Costing : ₹ {ratecost}
 
                             </label>
                             
@@ -428,8 +432,9 @@ export default function AddItem() {
                                 placeholder="Enter margin percentage"
                             />
                         </div> */}
+                        
                         <div className="w-full">
-                            <label htmlFor="discount" className="block mb-2 text-sm font-medium text-gray-900">Discount</label>
+                            <label htmlFor="discount" className="block mb-2 text-sm font-medium text-gray-900">Discount (%)</label>
                             <input
                                 type="number"
                                 name="discount"
@@ -441,7 +446,7 @@ export default function AddItem() {
                             />
                         </div>
                         <div className="w-full">
-                            <label htmlFor="packingCharge" className="block mb-2 text-sm font-medium text-gray-900">Packing Charge</label>
+                            <label htmlFor="packingCharge" className="block mb-2 text-sm font-medium text-gray-900">Packing Charge (in rs.)</label>
                             <input
                                 type="number"
                                 name="packingCharge"
@@ -495,6 +500,31 @@ export default function AddItem() {
 </div> */}
 
                     </div>
+                    <button
+                            type="button"
+                            className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-700 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-green-500 mb-2"
+                            onClick={() => setIsSwsrModalOpen(true)} 
+                        >
+                            Add SWSR
+                        </button>
+                    <div className="w-full">
+                            <label htmlFor="mrp" className="block mb-2 text-sm font-medium text-gray-900">MRP</label>
+                            <input
+                                type="number"
+                                name="mrp"
+                                id="mrp"
+                                value={product.mrp}
+                                onChange={handleChange}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                placeholder="Enter MRP"
+                            />
+                        </div>
+                        <div className="w-full mt-5">
+                            <label className="block mb-2 text-lg font-bold text-gray-900">Net Proifit: ₹ {isNaN(np)?0:np}</label>
+                        </div>
+                        <div className="w-full my-2">
+                            <label className="block mb-2 text-lg font-bold text-gray-900">Cloth Proifit: ₹ {cp}</label>
+                        </div>
                     
                     <button
                         type="submit"
@@ -521,6 +551,12 @@ export default function AddItem() {
             onClose={()=>setIsSwprModalOpen(false)}
             sizes={sizes.filter(size => product.sizes.includes(size.value))}
             onSave={handleSwprSave}
+            />
+            <SwsrModal 
+            isOpen={isSWSRModalOpen}
+            onClose={()=>setIsSwsrModalOpen(false)}
+            sizes={sizes.filter(size => product.sizes.includes(size.value))}
+            onSave={handleSwsrSave}
             />
 
         </section>
