@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { db, auth } from '../firebaseConfig';
-import { doc, getDoc, setDoc, collection } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import ExpenseInfo from './ExpenseInfo';
 import QuantityInfo from './QuantityInfo';
@@ -43,6 +43,28 @@ const CardDetails = () => {
     });
   }, []);
 
+  useEffect(() => {
+    const checkIfReordered = async () => {
+      try {
+        const reorderedItemsRef = collection(db, 'reorderedItems');
+        const q = query(reorderedItemsRef, where('itemId', '==', itemId));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          setIsReordered(true);
+        } else {
+          setIsReordered(false);
+        }
+      } catch (error) {
+        console.error('Error checking reordered item:', error);
+      }
+    };
+
+    if (userId) {
+      checkIfReordered();
+    }
+  }, [itemId, userId]);
+
   const handleReorder = async () => {
     if (!userId) {
       console.error('User is not authenticated');
@@ -53,7 +75,7 @@ const CardDetails = () => {
       const reorderedItemsRef = collection(db, 'reorderedItems');
       await setDoc(doc(reorderedItemsRef, itemId), {
         itemId,
-        userId,  // Store the user ID
+        userId,
         reorderedAt: new Date()
       });
       setIsReordered(true);
