@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Card({ id, img, jobslip, itemName, status, category, fabricator, clothname, quality, meter, onDelete ,expenses,averagePiece,clothSaleRate,fabrication}) {
+export default function Card({ id, img, jobslip, itemName, status, category=[], fabricator, clothname, quality, meter, onDelete ,expenses=[],averagePiece,clothSaleRate,fabrication}) {
 
   const totalExpenses = expenses.reduce((acc, value) => acc + (value || 0), 0);
   const rateCost = (Number(averagePiece) * Number(clothSaleRate) + Number(totalExpenses) + Number(fabrication)).toFixed(2);

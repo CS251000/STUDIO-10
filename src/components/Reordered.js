@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Card from './Card';
 import { db } from '../firebaseConfig';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, deleteDoc } from 'firebase/firestore';
 
 const ReorderedItems = () => {
   const [reorderedItems, setReorderedItems] = useState([]);
@@ -36,6 +36,28 @@ const ReorderedItems = () => {
     fetchReorderedItems();
   }, []);
 
+  const handleDelete = async (productId) => {
+    const confirmed = window.confirm("Are you sure you want to delete this item?");
+    if (confirmed){
+    try {
+      // Delete from products collection
+      await deleteDoc(doc(db, 'products', productId));
+
+      // Delete from reorderedItems collection
+      const reorderedItem = reorderedItems.find(item => item.itemId === productId);
+      if (reorderedItem) {
+        await deleteDoc(doc(db, 'reorderedItems', reorderedItem.id));
+      }
+
+      // Update state to reflect the deletion
+      setProducts(products.filter(product => product.id !== productId));
+      setReorderedItems(reorderedItems.filter(item => item.itemId !== productId));
+    } catch (error) {
+      console.error('Error deleting item:', error);
+    }
+  }
+  };
+
   return (
     <div className="container mx-auto px-4 mt-4">
       <h2 className="text-2xl font-bold mb-4">Reordered Items</h2>
@@ -43,22 +65,25 @@ const ReorderedItems = () => {
         {products.length === 0 ? (
           <p>No reordered items found.</p>
         ) : (
-          products.map((product) => (
+          products.map((card) => (
             <Card
-              key={product.id}
-              id={product.id}
-              img={product.imageUrl}
-              jobslip={product.jobslip}
-              itemName={product.itemName}
-              status={product.status}
-              category={product.category}
-              fabricator={product.fabricator}
-              clothname={product.clothName}
-              quality={product.clothQuality}
-              meter={product.meter}
-              clothPurchaseRate={product.clothPurchaseRate}
-              // Optionally, if you want to include a delete functionality
-              // onDelete={handleDelete}
+              key={card.id}
+              id={card.id}
+              img={card.imageUrl}
+              jobslip={card.jobslip}
+              itemName={card.itemName}
+              status={card.status}
+              category={card.category}
+              fabricator={card.fabricator}
+              clothname={card.clothName}
+              quality={card.clothQuality}
+              meter={card.meter}
+              clothPurchaseRate={card.clothPurchaseRate}
+              onDelete={() => handleDelete(card.id)}
+              expenses={card.expenses}
+              averagePiece={card.averagePiece}
+              clothSaleRate={card.clothSaleRate}
+              fabrication={card.fabrication}
             />
           ))
         )}

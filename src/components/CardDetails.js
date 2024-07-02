@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { db } from '../firebaseConfig';
+import { db, auth } from '../firebaseConfig';
 import { doc, getDoc, setDoc, collection } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
 import ExpenseInfo from './ExpenseInfo';
 import QuantityInfo from './QuantityInfo';
 import SwprInfo from './SwprInfo';
@@ -11,6 +12,7 @@ const CardDetails = () => {
   const { itemId } = useParams();
   const [product, setProduct] = useState(null);
   const [isReordered, setIsReordered] = useState(false);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -31,11 +33,27 @@ const CardDetails = () => {
     fetchProduct();
   }, [itemId]);
 
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+      } else {
+        setUserId(null);
+      }
+    });
+  }, []);
+
   const handleReorder = async () => {
+    if (!userId) {
+      console.error('User is not authenticated');
+      return;
+    }
+
     try {
       const reorderedItemsRef = collection(db, 'reorderedItems');
       await setDoc(doc(reorderedItemsRef, itemId), {
         itemId,
+        userId,  // Store the user ID
         reorderedAt: new Date()
       });
       setIsReordered(true);
