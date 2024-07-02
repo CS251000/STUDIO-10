@@ -1,7 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Card({ id, img, jobslip, itemName, status, category, fabricator, clothname, quality, meter, clothPurchaseRate, onDelete }) {
+export default function Card({ id, img, jobslip, itemName, status, category, fabricator, clothname, quality, meter, onDelete ,expenses,averagePiece,clothSaleRate,fabrication}) {
+
+  const totalExpenses = expenses.reduce((acc, value) => acc + (value || 0), 0);
+  const rateCost = (Number(averagePiece) * Number(clothSaleRate) + Number(totalExpenses) + Number(fabrication)).toFixed(2);
   
   return (
     <div className={`max-w-sm border rounded-lg shadow border-gray-700 ${status ? ' bg-yellow-100' : 'bg-white'}`}>
@@ -30,7 +33,7 @@ export default function Card({ id, img, jobslip, itemName, status, category, fab
           Cloth Meter: {meter}
         </p>
         <p className="mb-3 font-normal text-gray-700">
-          Purchase Rate: {clothPurchaseRate}
+          Rate Costing: {rateCost}
         </p>
 
         <div className="flex justify-between">

@@ -79,6 +79,11 @@ export default function Home() {
             meter={card.meter}
             clothPurchaseRate={card.clothPurchaseRate}
             onDelete={handleDelete}
+            expenses={card.expenses}
+            averagePiece={card.averagePiece}
+            clothSaleRate={card.clothSaleRate}
+            fabrication={card.fabrication}
+
           />
         ))}
       </div>
