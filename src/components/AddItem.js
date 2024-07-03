@@ -10,6 +10,7 @@ import SwprModal from './SWPR';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import SwsrModal from './SWSR';
+import { RotatingLines } from 'react-loader-spinner';
 
 
 
@@ -46,6 +47,8 @@ export default function AddItem() {
         {value:'others',label:'Others'},
     ];
     const [userId, setUserId] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [product, setProduct] = useState({
         itemName: '',
@@ -70,9 +73,6 @@ export default function AddItem() {
         swpr:[],
         swsr:[],
         imageUrl:'',
-        // sizeWiseRateS:'',
-        // sizeWiseRateMLXL:'',
-        // sizeWiseRateXXL:'',
         createdAt:Timestamp.now(),
     });
     useEffect(() => {
@@ -128,32 +128,18 @@ export default function AddItem() {
     };
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        if (!file) return;
-
-        const storageRef = ref(storage, `images/${file.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-
-        uploadTask.on('state_changed',
-            (snapshot) => {
-                // Progress function
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log('Upload is ' + progress + '% done');
-            },
-            (error) => {
-                // Error function
-                console.error('Error uploading image: ', error);
-            },
-            () => {
-                // Completion function
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    console.log('File available at', downloadURL);
-                    setProduct((prevProduct) => ({
-                        ...prevProduct,
-                        imageUrl: downloadURL
-                    }));
-                });
-            }
-        );
+        if (file) {
+            setSelectedFile(file);
+        }
+    };
+    const openImageInNewTab = () => {
+        if (selectedFile) {
+            const newTab = window.open();
+            newTab.document.body.innerHTML = `<img src="${URL.createObjectURL(selectedFile)}" />`;
+        }
+    };
+    const handleRemoveImage = () => {
+        setSelectedFile(null);
     };
     const navigate= useNavigate();
 
@@ -186,20 +172,70 @@ export default function AddItem() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
 
-        try {
-            // Add the product to Firestore with the image URL
-            const docRef = await addDoc(collection(db, 'products'), {
-                ...product
-            });
+        if (selectedFile) {
+            const storageRef = ref(storage, `images/${selectedFile.name}`);
+            const uploadTask = uploadBytesResumable(storageRef, selectedFile);
 
-            console.log('Document written with ID: ', docRef.id);
-            navigate('/');
-            
-        } catch (error) {
-            console.error('Error adding document: ', error);
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                },
+                (error) => {
+                    console.error('Error uploading image: ', error);
+                },
+                async () => {
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                    try {
+                        const docRef = await addDoc(collection(db, 'products'), {
+                            ...product,
+                            imageUrl: downloadURL
+                        });
+                        console.log('Document written with ID: ', docRef.id);
+                        setTimeout(() => {
+                            setIsLoading(false); 
+                            navigate('/');
+                        }, 4000);
+                        
+                    } catch (error) {
+                        console.error('Error adding document: ', error);
+                        setIsLoading(false);
+                    }
+                }
+            );
+        } else {
+            try {
+                const docRef = await addDoc(collection(db, 'products'), product);
+                console.log('Document written with ID: ', docRef.id);
+                setTimeout(() => {
+                    setIsLoading(false); // Set loading state to false
+                    navigate('/');
+                }, 4000);
+               
+            } catch (error) {
+                console.error('Error adding document: ', error);
+                setIsLoading(false);
+            }
         }
-        
+    };
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <RotatingLines
+                    visible={true}
+                    height="96"
+                    width="96"
+                    color="grey"
+                    strokeWidth="5"
+                    animationDuration="0.75"
+                    ariaLabel="rotating-lines-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                />
+            </div>
+        );
     };
 
     const totalQuantity = product.quantities.reduce((acc, qty) => acc + qty, 0);
@@ -233,6 +269,24 @@ export default function AddItem() {
                             id="formFile"
                             onChange={handleImageChange}
                         />
+                        {selectedFile && (
+                                    <div className="relative">
+                                        <img
+                                            src={URL.createObjectURL(selectedFile)}
+                                            alt="Product"
+                                            className="w-16 h-16 object-cover rounded-lg"
+                                            onClick={openImageInNewTab}
+                                            style={{ cursor: 'pointer' }}
+                                        />
+                                        <button
+                                            type="button"
+                                            className="absolute top-0 right-0 bg-red-600 text-white p-1 rounded-full"
+                                            onClick={handleRemoveImage}
+                                        >
+                                            X
+                                        </button>
+                                    </div>
+                                )}
                     </div>
 
                     <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">

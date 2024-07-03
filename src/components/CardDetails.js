@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { db, auth } from '../firebaseConfig';
-import { doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc, setDoc, deleteDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import ExpenseInfo from './ExpenseInfo';
 import QuantityInfo from './QuantityInfo';
@@ -47,7 +47,7 @@ const CardDetails = () => {
     const checkIfReordered = async () => {
       try {
         const reorderedItemsRef = collection(db, 'reorderedItems');
-        const q = query(reorderedItemsRef, where('itemId', '==', itemId));
+        const q = query(reorderedItemsRef, where('itemId', '==', itemId), where('userId', '==', userId));
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
@@ -73,14 +73,21 @@ const CardDetails = () => {
 
     try {
       const reorderedItemsRef = collection(db, 'reorderedItems');
-      await setDoc(doc(reorderedItemsRef, itemId), {
-        itemId,
-        userId,
-        reorderedAt: new Date()
-      });
-      setIsReordered(true);
+      const docRef = doc(reorderedItemsRef, `${userId}_${itemId}`);
+
+      if (isReordered) {
+        await deleteDoc(docRef);
+        setIsReordered(false);
+      } else {
+        await setDoc(docRef, {
+          itemId,
+          userId,
+          reorderedAt: new Date()
+        });
+        setIsReordered(true);
+      }
     } catch (error) {
-      console.error('Error reordering item:', error);
+      console.error('Error handling reorder:', error);
     }
   };
 

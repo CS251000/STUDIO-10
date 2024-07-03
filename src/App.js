@@ -6,6 +6,7 @@ import AddItem from "./components/AddItem";
 import CardDetails from "./components/CardDetails";
 import Reordered from "./components/Reordered";
 import Login from "./components/Login";
+import UpdateItem from './components/UpdateItem';
 import Signup from "./components/Signup";
 import ProtectedRoute from './components/ProtectedRouter';
 import { AuthProvider } from "./hooks/useAuth";
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <ProtectedRoute><Home /></ProtectedRoute> },
       { path: "/:itemId", element: <ProtectedRoute><CardDetails /></ProtectedRoute> },
+      {path:'/update/:itemId',element:<ProtectedRoute><UpdateItem/></ProtectedRoute>},
       { path: "add", element: <ProtectedRoute><AddItem /></ProtectedRoute> },
       { path: "reordered", element: <ProtectedRoute><Reordered /></ProtectedRoute> },
       { path: "login", element: <Login /> },
