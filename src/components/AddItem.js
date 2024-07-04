@@ -197,7 +197,7 @@ export default function AddItem() {
                         setTimeout(() => {
                             setIsLoading(false); 
                             navigate('/');
-                        }, 4000);
+                        }, 2000);
                         
                     } catch (error) {
                         console.error('Error adding document: ', error);
@@ -212,7 +212,7 @@ export default function AddItem() {
                 setTimeout(() => {
                     setIsLoading(false); // Set loading state to false
                     navigate('/');
-                }, 4000);
+                }, 2000);
                
             } catch (error) {
                 console.error('Error adding document: ', error);

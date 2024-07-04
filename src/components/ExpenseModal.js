@@ -19,21 +19,23 @@ const ExpenseModal = ({ isOpen, onClose, expenses, onSave }) => {
 
     return (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-4 rounded-lg shadow-lg">
+            <div className="bg-white p-4 rounded-lg shadow-lg w-11/12 max-w-md">
                 <h2 className="text-lg font-bold mb-4">Enter Expenses</h2>
-                {expenses.map((expense, index) => (
-                    <div key={index} className="mb-2">
-                        <label className="block text-sm font-medium text-gray-700">
-                            {expense.label}
-                        </label>
-                        <input
-                            type="number"
-                            value={expenseValues[index]}
-                            onChange={(e) => handleExpenseChange(index, e.target.value)}
-                            className="mt-1 p-2 border border-gray-300 rounded-md w-full"
-                        />
-                    </div>
-                ))}
+                <div className="max-h-60 overflow-y-auto">
+                    {expenses.map((expense, index) => (
+                        <div key={index} className="mb-2">
+                            <label className="block text-sm font-medium text-gray-700">
+                                {expense.label}
+                            </label>
+                            <input
+                                type="number"
+                                value={expenseValues[index]}
+                                onChange={(e) => handleExpenseChange(index, e.target.value)}
+                                className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+                            />
+                        </div>
+                    ))}
+                </div>
                 <div className="mt-4 flex justify-end">
                     <button
                         onClick={handleSave}
