@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons'; // Import the faTimes icon
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'; // Import Firebase auth methods
 
 export default function Nav({ onSearch }) {
@@ -10,7 +10,7 @@ export default function Nav({ onSearch }) {
   const [user, setUser] = useState(null); // State to track the user
 
   const auth = getAuth();
-  const navigate= useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Set up a Firebase auth state observer and get user data
@@ -29,22 +29,27 @@ export default function Nav({ onSearch }) {
   const handleSearchChange = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
-    onSearch(query); 
+    onSearch(query);
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    onSearch('');
   };
 
   const handleLogout = () => {
     const conf = window.confirm("Are you sure you want to Logout");
-    if (conf){
-    signOut(auth)
-      .then(() => {
-        // Sign-out successful
-        setUser(null);
-        navigate('/login');
-      })
-      .catch((error) => {
-        // An error happened
-        console.error('Error signing out: ', error);
-      });
+    if (conf) {
+      signOut(auth)
+        .then(() => {
+          // Sign-out successful
+          setUser(null);
+          navigate('/login');
+        })
+        .catch((error) => {
+          // An error happened
+          console.error('Error signing out: ', error);
+        });
     }
   };
 
@@ -64,13 +69,20 @@ export default function Nav({ onSearch }) {
           </div>
           {searchVisible && (
             <div className="w-full md:w-auto md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center mb-4 md:mb-0">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={handleSearchChange}
-                className="bg-gray-100 rounded border border-gray-300 focus:outline-none focus:border-blue-500 text-base px-4 py-2"
-                placeholder="Search items..."
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  className="bg-gray-100 rounded border border-gray-300 focus:outline-none focus:border-blue-500 text-base px-4 py-2"
+                  placeholder="Search items..."
+                />
+                <FontAwesomeIcon
+                  icon={faTimes}
+                  className="absolute right-2 top-2 text-gray-500 text-xl cursor-pointer"
+                  onClick={handleClearSearch}
+                />
+              </div>
             </div>
           )}
           <nav className="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">

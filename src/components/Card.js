@@ -1,22 +1,35 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Card({ id, img, jobslip, itemName, status, category = [], fabricator, clothname, quality, meter, onDelete, expenses = [], averagePiece, clothSaleRate, fabrication }) {
+export default function Card({ id, img, jobslip, itemName, status, category = [], fabricator, clothname, quality, meter, onDelete, expenses = [], averagePiece, clothSaleRate, fabrication, timestamp }) {
 
   const totalExpenses = expenses.reduce((acc, value) => acc + (value || 0), 0);
   const rateCost = (Number(averagePiece) * Number(clothSaleRate) + Number(totalExpenses) + Number(fabrication)).toFixed(2);
 
+  // Convert Firestore timestamp to JavaScript Date and format it
+  const date = timestamp.toDate(); 
+  const formattedDate = date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
   return (
-    <div className={`max-w-sm border rounded-lg shadow border-gray-700 ${status ? ' bg-yellow-100' : 'bg-white'}`}>
+    <div className={`max-w-sm border rounded-lg shadow border-gray-700 ${status ? 'bg-yellow-100' : 'bg-white'}`}>
 
       <img className="rounded-t-lg w-full h-48 object-cover" src={img} alt='itemImage' />
 
       <div className="p-5">
 
-        <h5 className="mb-2 text-2xl font-bold tracking-tight text-blue-700">Job Slip: &nbsp; <span className='text-black text-md font-normal'>{jobslip}</span></h5>
+        <h5 className="mb-2 text-2xl font-bold tracking-tight text-blue-700">
+          Job Slip: &nbsp; <span className='text-black text-md font-normal'>{jobslip}</span>
+        </h5>
 
         <h6 className="mb-2 text-2xl font-bold tracking-tight text-black text-center">{itemName}</h6>
 
+        <p className="mb-3 font-normal text-gray-700">
+          Date: {formattedDate}
+        </p>
         <p className="mb-3 font-normal text-gray-700">
           Category: {category.join(' , ')}
         </p>
