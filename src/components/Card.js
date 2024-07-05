@@ -5,14 +5,16 @@ export default function Card({ id, img, jobslip, itemName, status, category = []
 
   const totalExpenses = expenses.reduce((acc, value) => acc + (value || 0), 0);
   const rateCost = (Number(averagePiece) * Number(clothSaleRate) + Number(totalExpenses) + Number(fabrication)).toFixed(2);
-
-  // Convert Firestore timestamp to JavaScript Date and format it
-  const date = timestamp.toDate(); 
-  const formattedDate = date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+  
+  let formattedDate = 'N/A';
+  if (timestamp && typeof timestamp.toDate === 'function') {
+    const date = timestamp.toDate();
+    formattedDate = date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  }
 
   return (
     <div className={`max-w-sm border rounded-lg shadow border-gray-700 ${status ? 'bg-yellow-100' : 'bg-white'}`}>

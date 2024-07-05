@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Card from './Card';
 import { db } from '../firebaseConfig';
 import { collection, getDocs, doc, getDoc, deleteDoc } from 'firebase/firestore';
+import { useOutletContext } from 'react-router-dom';
 
 const ReorderedItems = () => {
+  const { searchQuery } = useOutletContext();
   const [reorderedItems, setReorderedItems] = useState([]);
   const [products, setProducts] = useState([]);
 
@@ -57,6 +59,13 @@ const ReorderedItems = () => {
     }
   }
   };
+  const filteredData = products.filter(item =>
+    item.itemName.toLowerCase().includes(searchQuery.toLowerCase())||
+    item.fabricator.toLowerCase().includes(searchQuery.toLowerCase())||
+    item.jobslip.toLowerCase().includes(searchQuery.toLowerCase())||
+    item.clothName.toLowerCase().includes(searchQuery.toLowerCase())||
+    item.clothQuality.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="container mx-auto px-4 mt-4">
@@ -65,7 +74,7 @@ const ReorderedItems = () => {
         {products.length === 0 ? (
           <p>No reordered items found.</p>
         ) : (
-          products.map((card) => (
+          filteredData.map((card) => (
             <Card
               key={card.id}
               id={card.id}
