@@ -84,6 +84,7 @@ const ReorderedItems = () => {
               averagePiece={card.averagePiece}
               clothSaleRate={card.clothSaleRate}
               fabrication={card.fabrication}
+              timestamp={card.createdAt}
             />
           ))
         )}
