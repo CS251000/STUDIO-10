@@ -113,8 +113,8 @@ export default function Home() {
             status={card.status}
             category={card.category}
             fabricator={card.fabricator}
-            clothName={card.clothName}
-            clothQuality={card.clothQuality}
+            clothname={card.clothName}
+            quality={card.clothQuality}
             meter={card.meter}
             clothPurchaseRate={card.clothPurchaseRate}
             onDelete={handleDelete}
