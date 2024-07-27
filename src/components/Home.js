@@ -94,6 +94,7 @@ export default function Home() {
 
   const filteredData = data.filter(item =>
     item.itemName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    String(item.category).toLowerCase().includes(searchQuery.toLowerCase())||
     item.fabricator.toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.jobslip.toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.clothName.toLowerCase().includes(searchQuery.toLowerCase()) ||

@@ -89,9 +89,9 @@ export default function Nav({ onSearch }) {
             {/* Add any additional navigation items here if needed */}
           </nav>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-[10px]">
-            <button className="inline-flex items-center bg-slate-200 hover:bg-slate-400 border-0 py-1 px-3 focus:outline-none rounded text-base text-black">
+            {/* <button className="inline-flex items-center bg-slate-200 hover:bg-slate-400 border-0 py-1 px-3 focus:outline-none rounded text-base text-black">
               Filter
-            </button>
+            </button> */}
             <Link to="/add">
               <button className="inline-flex items-center bg-blue-700 hover:bg-blue-800 border-0 py-1 px-3 focus:outline-none rounded text-base text-white">
                 Add Item +
