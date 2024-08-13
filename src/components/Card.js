@@ -44,9 +44,9 @@ export default function Card({ id, img, jobslip, itemName, status, category = []
         <p className="mb-3 font-normal text-gray-700">
           Cloth Quality: {quality}
         </p>
-        <p className="mb-3 font-normal text-gray-700">
+        {/* <p className="mb-3 font-normal text-gray-700">
           Cloth Meter: {meter}
-        </p>
+        </p> */}
         <p className="mb-3 font-normal text-gray-700">
           Rate Costing: {rateCost}
         </p>

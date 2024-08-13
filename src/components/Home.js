@@ -2,14 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import Card from './Card';
 import { db, auth, storage } from '../firebaseConfig';
-import { collection, getDocs, getDoc, doc, deleteDoc, query, orderBy, where } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, query, orderBy, where,doc,getDoc } from 'firebase/firestore';
 import { ref, deleteObject } from 'firebase/storage';
 import { onAuthStateChanged } from 'firebase/auth';
+import FilterModal from './FilterModal';
 
 export default function Home() {
   const { searchQuery } = useOutletContext();
   const [data, setData] = useState([]);
   const [userId, setUserId] = useState(null);
+  
+  // State to manage filters and modal visibility
+  const [filterCategory, setFilterCategory] = useState('');
+  const [filterFabricator, setFilterFabricator] = useState('');
+  const [filterClothQuality, setFilterClothQuality] = useState('');
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -25,14 +32,33 @@ export default function Home() {
     const fetchData = async () => {
       if (userId) {
         try {
-          const q = query(
+          // Fetch all products for the user
+          let q = query(
             collection(db, 'products'),
             where('user', '==', userId),
             orderBy('createdAt', 'desc')
           );
+
           const querySnapshot = await getDocs(q);
           const products = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          setData(products);
+
+          // Apply filters locally (case-insensitive)
+          const filteredProducts = products.filter(product => {
+            
+            const matchesCategory = filterCategory 
+              ? product.category?.toLowerCase() === filterCategory.toLowerCase()
+              : true;
+            const matchesFabricator = filterFabricator
+              ? product.fabricator?.toLowerCase()=== filterFabricator.toLowerCase()
+              : true;
+            const matchesClothQuality = filterClothQuality
+              ? product.clothQuality?.toLowerCase() === filterClothQuality.toLowerCase()
+              : true;
+
+            return matchesCategory && matchesFabricator && matchesClothQuality;
+          });
+
+          setData(filteredProducts);
         } catch (error) {
           console.error('Error fetching data: ', error);
         }
@@ -40,13 +66,12 @@ export default function Home() {
     };
 
     fetchData();
-  }, [userId]);
+  }, [userId, filterCategory, filterFabricator, filterClothQuality]);
 
   const handleDelete = async (id) => {
     const confirmed = window.confirm("Are you sure you want to delete this item?");
     if (confirmed) {
       try {
-        // Fetch the document to get the image URL
         const docRef = doc(db, 'products', id);
         const docSnap = await getDoc(docRef);
 
@@ -55,11 +80,8 @@ export default function Home() {
           const imageUrl = data.imageUrl;
 
           if (imageUrl) {
-            // Create a reference to the file to delete
             const storageRef = ref(storage, imageUrl);
-
             try {
-              // Delete the file
               await deleteObject(storageRef);
               console.log('Image deleted successfully');
             } catch (error) {
@@ -67,10 +89,8 @@ export default function Home() {
             }
           }
 
-          // Delete the document from Firestore
           await deleteDoc(docRef);
 
-          // Find and delete the corresponding reorderedItem
           const reorderedItemsRef = collection(db, 'reorderedItems');
           const q = query(reorderedItemsRef, where('itemId', '==', id));
           const reorderedSnapshot = await getDocs(q);
@@ -94,16 +114,33 @@ export default function Home() {
 
   const filteredData = data.filter(item =>
     item.itemName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    String(item.category).toLowerCase().includes(searchQuery.toLowerCase())||
+    String(item.category).toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.fabricator.toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.jobslip.toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.clothName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.clothQuality.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleApplyFilters = ({ category, fabricator, clothQuality }) => {
+    setFilterCategory(category);
+    setFilterFabricator(fabricator);
+    setFilterClothQuality(clothQuality);
+  };
+
   return (
     <div className="container mx-auto px-4 mt-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <button
+        className="flex items-center bg-slate-400 hover:bg-slate-600 border-0 py-1 px-3 focus:outline-none rounded text-base text-black"
+        onClick={() => setIsFilterModalOpen(true)}
+      >
+        Filter
+      </button>
+      <FilterModal
+        isOpen={isFilterModalOpen}
+        onClose={() => setIsFilterModalOpen(false)}
+        onApply={handleApplyFilters}
+      />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4">
         {filteredData.map((card) => (
           <Card
             key={card.id}
