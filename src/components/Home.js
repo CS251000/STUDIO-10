@@ -46,7 +46,7 @@ export default function Home() {
           // Apply filters locally (case-insensitive, partial matching)
           const filteredProducts = products.filter(product => {
             const matchesCategory = filterCategory 
-              ? (product.category || '').includes(filterCategory.toLowerCase())
+              ? String(product.category || '').toLowerCase().includes(filterCategory.toLowerCase())
               : true;
             const matchesFabricator = filterFabricator
               ? (product.fabricator || '').toLowerCase().includes(filterFabricator.toLowerCase())
