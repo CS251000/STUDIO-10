@@ -71,7 +71,7 @@ export default function AddItem() {
         averagePiece: '',
         mrp: '',
         fabrication: '',
-        // margin: '',
+    
         discount: '',
         packingCharge: '',
         quantities: [],

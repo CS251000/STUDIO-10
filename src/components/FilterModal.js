@@ -9,6 +9,12 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
     onApply({ category, fabricator, clothQuality });
     onClose();
   };
+  const handleCancel = () => {
+    setCategory('');
+    setFabricator('');
+    setClothQuality('');
+    onClose();  // Close the modal and reset filters
+  };
 
   return (
     isOpen && (
@@ -48,10 +54,10 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
           
           <div className="flex justify-end space-x-4">
             <button
-              onClick={onClose}
+              onClick={handleCancel}
               className="bg-red-500 text-white px-4 py-2 rounded"
             >
-              Cancel
+              Clear
             </button>
             <button
               onClick={handleApply}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import Card from './Card';
 import { db, auth, storage } from '../firebaseConfig';
-import { collection, getDocs, deleteDoc, query, orderBy, where,doc,getDoc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, query, orderBy, where, doc, getDoc } from 'firebase/firestore';
 import { ref, deleteObject } from 'firebase/storage';
 import { onAuthStateChanged } from 'firebase/auth';
 import FilterModal from './FilterModal';
@@ -11,7 +11,7 @@ export default function Home() {
   const { searchQuery } = useOutletContext();
   const [data, setData] = useState([]);
   const [userId, setUserId] = useState(null);
-  
+
   // State to manage filters and modal visibility
   const [filterCategory, setFilterCategory] = useState('');
   const [filterFabricator, setFilterFabricator] = useState('');
@@ -41,22 +41,23 @@ export default function Home() {
 
           const querySnapshot = await getDocs(q);
           const products = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          console.log("Fetched products:", products); // Log the fetched products
 
-          // Apply filters locally (case-insensitive)
+          // Apply filters locally (case-insensitive, partial matching)
           const filteredProducts = products.filter(product => {
-            
             const matchesCategory = filterCategory 
-              ? product.category?.toLowerCase() === filterCategory.toLowerCase()
+              ? (product.category || '').includes(filterCategory.toLowerCase())
               : true;
             const matchesFabricator = filterFabricator
-              ? product.fabricator?.toLowerCase()=== filterFabricator.toLowerCase()
+              ? (product.fabricator || '').toLowerCase().includes(filterFabricator.toLowerCase())
               : true;
             const matchesClothQuality = filterClothQuality
-              ? product.clothQuality?.toLowerCase() === filterClothQuality.toLowerCase()
+              ? (product.clothQuality || '').toLowerCase().includes(filterClothQuality.toLowerCase())
               : true;
 
             return matchesCategory && matchesFabricator && matchesClothQuality;
           });
+          console.log("Filtered products:", filteredProducts); // Log the filtered products
 
           setData(filteredProducts);
         } catch (error) {
@@ -112,16 +113,20 @@ export default function Home() {
     }
   };
 
-  const filteredData = data.filter(item =>
-    item.itemName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    String(item.category).toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.fabricator.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.jobslip.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.clothName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.clothQuality.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredData = data.filter(item => {
+    console.log("Filtering item:", item); // Log each item before filtering
+    return (
+      item.itemName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(item.category).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.fabricator.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.jobslip.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.clothName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.clothQuality.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
 
   const handleApplyFilters = ({ category, fabricator, clothQuality }) => {
+    console.log("Applying filters:", { category, fabricator, clothQuality }); // Log applied filters
     setFilterCategory(category);
     setFilterFabricator(fabricator);
     setFilterClothQuality(clothQuality);
