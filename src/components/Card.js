@@ -50,14 +50,17 @@ export default function Card({ id, img, jobslip, itemName, status, category = []
         <p className="mb-3 font-normal text-gray-700">
           Rate Costing: {rateCost}
         </p>
+        <p className="mb-3 font-normal text-gray-700">
+          Sale Rate: {clothSaleRate}
+        </p>
 
         <div className="flex justify-between">
           <Link to={`/${id}`}>
             <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Info</button>
           </Link>
-          {/* <Link to={`/update/${id}`}>
+          <Link to={`/update/${id}`}>
             <button type="button" className="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Update</button>
-          </Link> */}
+          </Link>
           <button
             type="button"
             onClick={() => onDelete(id)}
