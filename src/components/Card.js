@@ -51,7 +51,7 @@ export default function Card({ id, img, jobslip, itemName, status, category = []
           Rate Costing: {rateCost}
         </p>
         <p className="mb-3 font-normal text-gray-700">
-          Sale Rate: {clothSaleRate}
+          Cloth Sale Rate: {clothSaleRate}
         </p>
 
         <div className="flex justify-between">

@@ -5,7 +5,7 @@ import ExpenseModal from './ExpenseModal';
 import { db, storage } from '../firebaseConfig';
 import {  doc, getDoc, updateDoc, Timestamp } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import SwprModal from './SWPR';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
@@ -242,6 +242,7 @@ export default function UpdateItem() {
                 setIsLoading(false);
             }
         }
+        navigate('/');
     };
 
     if (isLoading) {
@@ -291,7 +292,7 @@ export default function UpdateItem() {
                                 onChange={handleChange}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="Enter item name"
-                                required
+                                
                             />
                         </div>
 
@@ -305,7 +306,7 @@ export default function UpdateItem() {
                                 onChange={handleChange}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="Enter job slip"
-                                required
+                                
                             />
                         </div>
 
@@ -319,7 +320,7 @@ export default function UpdateItem() {
                                 onChange={handleChange}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="Enter fabricator"
-                                required
+                                
                             />
                         </div>
 
@@ -342,6 +343,7 @@ export default function UpdateItem() {
                                 value={product.sizes.map(size => ({ value: size, label: size }))}
                                 options={sizes}
                                 onChange={handleSizeChange}
+
                                 isMultiple
                                 name="sizes"
                                 id="sizes"
@@ -359,7 +361,7 @@ export default function UpdateItem() {
                                 onChange={handleChange}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="Enter meter"
-                                required
+                                
                             />
                         </div>
 
@@ -385,7 +387,7 @@ export default function UpdateItem() {
                                 onChange={handleChange}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="Enter cloth quality"
-                                required
+                                
                             />
                         </div>
 
@@ -399,7 +401,7 @@ export default function UpdateItem() {
                                 onChange={handleChange}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="Enter cloth name"
-                                required
+                                
                             />
                         </div>
 
@@ -505,6 +507,7 @@ export default function UpdateItem() {
                             isOpen={isQuantityModalOpen}
                             onClose={() => setIsQuantityModalOpen(false)}
                             onSave={handleQuantitySave}
+                            sizes={product.sizes}
                             quantities={product.quantities}
                         />
                     </div>
@@ -531,6 +534,7 @@ export default function UpdateItem() {
                             isOpen={isSWPRModalOpen}
                             onClose={() => setIsSwprModalOpen(false)}
                             onSave={handleSwprSave}
+                            sizes={product.sizes}
                             swpr={product.swpr}
                         />
                     </div>
@@ -542,6 +546,7 @@ export default function UpdateItem() {
                             isOpen={isSWSRModalOpen}
                             onClose={() => setIsSwsrModalOpen(false)}
                             onSave={handleSwsrSave}
+                            sizes={product.sizes}
                             swsr={product.swsr}
                         />
                     </div>
@@ -580,12 +585,15 @@ export default function UpdateItem() {
                     </div>
 
                     <div className="mt-8">
+                        
                         <button
                             type="submit"
-                            className="w-full bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 transition duration-200"
+                            className="w-full bg-yellow-800 text-black py-2 px-4 rounded-lg hover:bg-primary-700 transition duration-200"
                         >
                             Update Product
                         </button>
+                        
+                        
                     </div>
                 </form>
             </div>

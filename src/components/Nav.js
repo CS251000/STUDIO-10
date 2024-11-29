@@ -3,26 +3,26 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faTimes } from '@fortawesome/free-solid-svg-icons';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-import FilterModal from './FilterModal';
+// import FilterModal from './FilterModal';
 
 export default function Nav({ onSearch }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [user, setUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
+  // const handleOpenModal = () => {
+  //   setIsModalOpen(true);
+  // };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+  // const handleCloseModal = () => {
+  //   setIsModalOpen(false);
+  // };
 
-  const handleApplyFilters = () => {
-    // Apply filter logic here
-    console.log("Filters applied");
-    setIsModalOpen(false);
-  };
+  // const handleApplyFilters = () => {
+  //   // Apply filter logic here
+  //   console.log("Filters applied");
+  //   setIsModalOpen(false);
+  // };
 
   const auth = getAuth();
   const navigate = useNavigate();
