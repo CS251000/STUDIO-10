@@ -501,7 +501,9 @@ export default function UpdateItem() {
                         <h3 className="text-lg font-medium mb-4">Quantities</h3>
                         <div className="flex items-center justify-between mb-2">
                             <span>Total Quantity: {totalQuantity}</span>
-                            <button type="button" className="text-primary-600 underline" onClick={() => setIsQuantityModalOpen(true)}>Add/Update Quantities</button>
+                            <button type="button" 
+                            className="text-white bg-blue-500 hover:bg-blue-600 focus:ring focus:ring-blue-300 px-4 py-2 rounded-lg transition"
+                            onClick={() => setIsQuantityModalOpen(true)}>Update Quantities</button>
                         </div>
                         <QuantityModal
                             isOpen={isQuantityModalOpen}
@@ -516,7 +518,7 @@ export default function UpdateItem() {
                         <h3 className="text-lg font-medium mb-4">Expenses</h3>
                         <div className="flex items-center justify-between mb-2">
                             <span>Total Expenses: {totalExpenses}</span>
-                            <button type="button" className="text-primary-600 underline" onClick={() => setIsExpenseModalOpen(true)}>Add/Update Expenses</button>
+                            <button type="button" className="text-white bg-blue-500 hover:bg-blue-600 focus:ring focus:ring-blue-300 px-4 py-2 rounded-lg transition" onClick={() => setIsExpenseModalOpen(true)}>Update Expenses</button>
                         </div>
                         <ExpenseModal
                             isOpen={isExpenseModalOpen}
@@ -529,7 +531,7 @@ export default function UpdateItem() {
 
                     <div className="mt-6">
                         <h3 className="text-lg font-medium mb-4">SWPR</h3>
-                        <button type="button" className="text-primary-600 underline" onClick={() => setIsSwprModalOpen(true)}>Add/Update SWPR</button>
+                        <button type="button" className="text-white bg-blue-500 hover:bg-blue-600 focus:ring focus:ring-blue-300 px-4 py-2 rounded-lg transition" onClick={() => setIsSwprModalOpen(true)}>Update SWPR</button>
                         <SwprModal
                             isOpen={isSWPRModalOpen}
                             onClose={() => setIsSwprModalOpen(false)}
@@ -541,13 +543,13 @@ export default function UpdateItem() {
 
                     <div className="mt-6">
                         <h3 className="text-lg font-medium mb-4">SWSR</h3>
-                        <button type="button" className="text-primary-600 underline" onClick={() => setIsSwsrModalOpen(true)}>Add/Update SWSR</button>
+                        <button type="button" className="text-white bg-green-700 hover:bg-green-600 focus:ring focus:ring-blue-300 px-4 py-2 rounded-lg transition" onClick={() => setIsSwsrModalOpen(true)}>Update SWSR</button>
                         <SwsrModal
                             isOpen={isSWSRModalOpen}
                             onClose={() => setIsSwsrModalOpen(false)}
                             onSave={handleSwsrSave}
                             sizes={product.sizes}
-                            swsr={product.swsr}
+                            swsr2={product.swsr}
                         />
                     </div>
 
@@ -576,7 +578,7 @@ export default function UpdateItem() {
                                 <span className="font-semibold">Rate Cost:</span> {ratecost}
                             </div>
                             <div>
-                                <span className="font-semibold">Net Profit:</span> {np}
+                                <span className="font-semibold">Net Profit:</span> {np.toFixed(2)}
                             </div>
                             <div>
                                 <span className="font-semibold">Cloth Profit:</span> {cp}
