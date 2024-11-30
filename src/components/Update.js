@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-tailwindcss-select';
-import QuantityModal from './Quantity';
-import ExpenseModal from './ExpenseModal';
+import QuantityUpModal from './QuantityUp';
+import ExpenseUpModal from './ExpenseUp';
 import { db, storage } from '../firebaseConfig';
 import {  doc, getDoc, updateDoc, Timestamp } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import SwprModal from './SWPR';
+import { useNavigate, useParams } from 'react-router-dom';
+import SwprUpModal from './SWPRUP';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
-import SwsrModal from './SWSR';
+import SwsrUpModal from './SWSRup';
 import { RotatingLines } from 'react-loader-spinner';
 
 export default function UpdateItem() {
@@ -505,12 +505,12 @@ export default function UpdateItem() {
                             className="text-white bg-blue-500 hover:bg-blue-600 focus:ring focus:ring-blue-300 px-4 py-2 rounded-lg transition"
                             onClick={() => setIsQuantityModalOpen(true)}>Update Quantities</button>
                         </div>
-                        <QuantityModal
+                        <QuantityUpModal
                             isOpen={isQuantityModalOpen}
                             onClose={() => setIsQuantityModalOpen(false)}
                             onSave={handleQuantitySave}
                             sizes={product.sizes}
-                            quantities={product.quantities}
+                            quantities2={product.quantities}
                         />
                     </div>
 
@@ -520,11 +520,11 @@ export default function UpdateItem() {
                             <span>Total Expenses: {totalExpenses}</span>
                             <button type="button" className="text-white bg-blue-500 hover:bg-blue-600 focus:ring focus:ring-blue-300 px-4 py-2 rounded-lg transition" onClick={() => setIsExpenseModalOpen(true)}>Update Expenses</button>
                         </div>
-                        <ExpenseModal
+                        <ExpenseUpModal
                             isOpen={isExpenseModalOpen}
                             onClose={() => setIsExpenseModalOpen(false)}
                             onSave={handleExpenseSave}
-                            expenses={product.expenses}
+                            expenses2={product.expenses}
                             availableExpenses={expenses}
                         />
                     </div>
@@ -532,19 +532,19 @@ export default function UpdateItem() {
                     <div className="mt-6">
                         <h3 className="text-lg font-medium mb-4">SWPR</h3>
                         <button type="button" className="text-white bg-blue-500 hover:bg-blue-600 focus:ring focus:ring-blue-300 px-4 py-2 rounded-lg transition" onClick={() => setIsSwprModalOpen(true)}>Update SWPR</button>
-                        <SwprModal
+                        <SwprUpModal
                             isOpen={isSWPRModalOpen}
                             onClose={() => setIsSwprModalOpen(false)}
                             onSave={handleSwprSave}
                             sizes={product.sizes}
-                            swpr={product.swpr}
+                            swpr2={product.swpr}
                         />
                     </div>
 
                     <div className="mt-6">
                         <h3 className="text-lg font-medium mb-4">SWSR</h3>
                         <button type="button" className="text-white bg-green-700 hover:bg-green-600 focus:ring focus:ring-blue-300 px-4 py-2 rounded-lg transition" onClick={() => setIsSwsrModalOpen(true)}>Update SWSR</button>
-                        <SwsrModal
+                        <SwsrUpModal
                             isOpen={isSWSRModalOpen}
                             onClose={() => setIsSwsrModalOpen(false)}
                             onSave={handleSwsrSave}
