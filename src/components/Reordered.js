@@ -100,7 +100,7 @@ const ReorderedItems = () => {
                 <Card
                   key={card.id}
                   id={card.id}
-                  img={card.imageUrl}
+                  imag={card.imageUrl}
                   jobslip={card.jobslip}
                   itemName={card.itemName}
                   status={card.status}

@@ -16,6 +16,7 @@ export default function Home() {
   const [filterCategory, setFilterCategory] = useState('');
   const [filterFabricator, setFilterFabricator] = useState('');
   const [filterClothQuality, setFilterClothQuality] = useState('');
+  const [filterStatus,setFilterStatus]= useState(false);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   useEffect(() => {
@@ -150,7 +151,7 @@ export default function Home() {
           <Card
             key={card.id}
             id={card.id}
-            img={card.imageUrl}
+            imag={card.imageUrl}
             jobslip={card.jobslip}
             itemName={card.itemName}
             status={card.status}

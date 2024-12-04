@@ -1,11 +1,70 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { collection, doc, setDoc, deleteDoc, query, where, getDocs } from 'firebase/firestore';
+import { db, auth } from '../firebaseConfig';
+import { onAuthStateChanged } from 'firebase/auth';
 
-export default function Card({ id, img, jobslip, itemName, status, category = [], fabricator, clothname, quality, meter, onDelete, expenses = [], averagePiece, clothSaleRate, fabrication, timestamp }) {
+export default function Card({ id, imag, jobslip, itemName, status, category = [], fabricator, clothname, quality, meter, onDelete, expenses = [], averagePiece, clothSaleRate, fabrication, timestamp }) {
+  const [isReordered, setIsReordered] = useState(false);
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+      } else {
+        setUserId(null);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    const checkIfReordered = async () => {
+      try {
+        if (!userId) return;
+
+        const reorderedItemsRef = collection(db, 'reorderedItems');
+        const q = query(reorderedItemsRef, where('itemId', '==', id), where('userId', '==', userId));
+        const querySnapshot = await getDocs(q);
+
+        setIsReordered(!querySnapshot.empty);
+      } catch (error) {
+        console.error('Error checking reorder status:', error);
+      }
+    };
+
+    checkIfReordered();
+  }, [id, userId]);
+
+  const handleReorder = async () => {
+    if (!userId) {
+      console.error('User is not authenticated');
+      return;
+    }
+
+    try {
+      const reorderedItemsRef = collection(db, 'reorderedItems');
+      const docRef = doc(reorderedItemsRef, `${userId}_${id}`);
+
+      if (isReordered) {
+        await deleteDoc(docRef);
+        setIsReordered(false);
+      } else {
+        await setDoc(docRef, {
+          itemId: id,
+          userId,
+          reorderedAt: new Date(),
+        });
+        setIsReordered(true);
+      }
+    } catch (error) {
+      console.error('Error handling reorder:', error);
+    }
+  };
 
   const totalExpenses = expenses.reduce((acc, value) => acc + (value || 0), 0);
   const rateCost = (Number(averagePiece) * Number(clothSaleRate) + Number(totalExpenses) + Number(fabrication)).toFixed(2);
-  
+
   let formattedDate = 'N/A';
   if (timestamp && typeof timestamp.toDate === 'function') {
     const date = timestamp.toDate();
@@ -18,41 +77,37 @@ export default function Card({ id, img, jobslip, itemName, status, category = []
 
   return (
     <div className={`max-w-sm border rounded-lg shadow border-gray-700 ${status ? 'bg-yellow-100' : 'bg-white'}`}>
-
-      <img className="rounded-t-lg w-full h-48 object-cover" src={img} alt='itemImage' />
-
+      
+      {imag ? (
+  <img
+    className="rounded-t-lg w-full h-48 object-cover"
+    src={imag}
+    alt="itemImage"
+    onError={(e) => e.target.style.display = 'none'}
+  />
+) : null}
+      
       <div className="p-5">
-
+        
+        
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-blue-700">
-          Job Slip: &nbsp; <span className='text-black text-md font-normal'>{jobslip}</span>
+          Job Slip: &nbsp; <span className="text-black text-md font-normal">{jobslip}</span>
         </h5>
-
+        <button
+            type="button"
+            onClick={handleReorder}
+            className={`text-white ${isReordered ? 'bg-green-700' : 'bg-blue-700 hover:bg-blue-800'} focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 flex flex-row-reverse ml-auto`}
+          >
+            {isReordered ? 'Reordered' : 'ReOrder'}
+          </button>
         <h6 className="mb-2 text-2xl font-bold tracking-tight text-black text-center">{itemName}</h6>
-
-        <p className="mb-3 font-normal text-gray-700">
-          Date: {formattedDate}
-        </p>
-        <p className="mb-3 font-normal text-gray-700">
-          Category: {category.join(' , ')}
-        </p>
-        <p className="mb-3 font-normal text-gray-700">
-          Fabricator: {fabricator}
-        </p>
-        <p className="mb-3 font-normal text-gray-700">
-          Cloth Name: {clothname}
-        </p>
-        <p className="mb-3 font-normal text-gray-700">
-          Cloth Quality: {quality}
-        </p>
-        {/* <p className="mb-3 font-normal text-gray-700">
-          Cloth Meter: {meter}
-        </p> */}
-        <p className="mb-3 font-normal text-gray-700">
-          Rate Costing: {rateCost}
-        </p>
-        <p className="mb-3 font-normal text-gray-700">
-          Cloth Sale Rate: {clothSaleRate}
-        </p>
+        <p className="mb-3 font-normal text-gray-700">Date: {formattedDate}</p>
+        <p className="mb-3 font-normal text-gray-700">Category: {category.join(' , ')}</p>
+        <p className="mb-3 font-normal text-gray-700">Fabricator: {fabricator}</p>
+        <p className="mb-3 font-normal text-gray-700">Cloth Name: {clothname}</p>
+        <p className="mb-3 font-normal text-gray-700">Cloth Quality: {quality}</p>
+        <p className="mb-3 font-normal text-gray-700">Rate Costing: {rateCost}</p>
+        <p className="mb-3 font-normal text-gray-700">Cloth Sale Rate: {clothSaleRate}</p>
 
         <div className="flex justify-between">
           <Link to={`/${id}`}>
@@ -68,6 +123,7 @@ export default function Card({ id, img, jobslip, itemName, status, category = []
           >
             Delete
           </button>
+          
         </div>
       </div>
     </div>
