@@ -444,18 +444,7 @@ export default function UpdateItem() {
                             />
                         </div>
 
-                        <div className="w-full">
-                            <label htmlFor="mrp" className="block mb-2 text-sm font-medium text-gray-900">MRP</label>
-                            <input
-                                type="number"
-                                name="mrp"
-                                id="mrp"
-                                value={product.mrp}
-                                onChange={handleChange}
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                                placeholder="Enter MRP"
-                            />
-                        </div>
+                        
                         <div className="w-full">
                             <label htmlFor="desc" className="block mb-2 text-sm font-medium text-gray-900">Description</label>
                             <textarea
@@ -564,6 +553,18 @@ export default function UpdateItem() {
                             swsr2={product.swsr}
                         />
                     </div>
+                    <div className="w-52 mt-10">
+                            <label htmlFor="mrp" className="block mb-2 text-sm font-medium text-gray-900">MRP</label>
+                            <input
+                                type="number"
+                                name="mrp"
+                                id="mrp"
+                                value={product.mrp}
+                                onChange={handleChange}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                placeholder="Enter MRP"
+                            />
+                        </div>
 
                     <div className="mt-6">
                         <h3 className="text-lg font-medium mb-4">Product Image</h3>
@@ -602,7 +603,7 @@ export default function UpdateItem() {
                         
                         <button
                             type="submit"
-                            className="w-full bg-yellow-800 text-black py-2 px-4 rounded-lg hover:bg-primary-700 transition duration-200"
+                            className="w-full bg-yellow-500 text-black py-2 px-4 rounded-lg hover:bg-primary-700 transition duration-200"
                         >
                             Update Product
                         </button>

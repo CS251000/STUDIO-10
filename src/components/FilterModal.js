@@ -67,7 +67,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
                   onChange={() => setStatus(true)}
                   className="mr-2"
                 />
-                Checked
+                Clear
               </label>
               <label>
                 <input
@@ -78,7 +78,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
                   onChange={() => setStatus(false)}
                   className="mr-2"
                 />
-                Unchecked
+                Pending
               </label>
               <label>
                 <input
@@ -89,7 +89,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
                   onChange={() => setStatus(null)}
                   className="mr-2"
                 />
-                None
+                Both
               </label>
             </div>
           </div>
