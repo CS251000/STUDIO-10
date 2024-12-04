@@ -8,7 +8,7 @@ import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 export default function Nav({ onSearch }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [user, setUser] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
 
   // const handleOpenModal = () => {
   //   setIsModalOpen(true);

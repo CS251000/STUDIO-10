@@ -16,7 +16,7 @@ export default function Home() {
   const [filterCategory, setFilterCategory] = useState('');
   const [filterFabricator, setFilterFabricator] = useState('');
   const [filterClothQuality, setFilterClothQuality] = useState('');
-  const [filterStatus,setFilterStatus]= useState(false);
+  const [filterStatus,setFilterStatus]= useState(null);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   useEffect(() => {
@@ -55,8 +55,11 @@ export default function Home() {
             const matchesClothQuality = filterClothQuality
               ? (product.clothQuality || '').toLowerCase().includes(filterClothQuality.toLowerCase())
               : true;
+            const matchesStatus = filterStatus !== null
+              ? product.status === filterStatus
+              : true;
 
-            return matchesCategory && matchesFabricator && matchesClothQuality;
+            return matchesCategory && matchesFabricator && matchesClothQuality && matchesStatus;
           });
           console.log("Filtered products:", filteredProducts); // Log the filtered products
 
@@ -68,7 +71,7 @@ export default function Home() {
     };
 
     fetchData();
-  }, [userId, filterCategory, filterFabricator, filterClothQuality]);
+  }, [userId, filterCategory, filterFabricator, filterClothQuality,filterStatus]);
 
   const handleDelete = async (id) => {
     const confirmed = window.confirm("Are you sure you want to delete this item?");
@@ -126,11 +129,11 @@ export default function Home() {
     );
   });
 
-  const handleApplyFilters = ({ category, fabricator, clothQuality }) => {
-    console.log("Applying filters:", { category, fabricator, clothQuality }); // Log applied filters
+  const handleApplyFilters = ({ category, fabricator, clothQuality,status }) => {
     setFilterCategory(category);
     setFilterFabricator(fabricator);
     setFilterClothQuality(clothQuality);
+    setFilterStatus(status);
   };
 
   return (

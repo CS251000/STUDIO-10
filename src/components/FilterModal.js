@@ -4,16 +4,19 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
   const [category, setCategory] = useState('');
   const [fabricator, setFabricator] = useState('');
   const [clothQuality, setClothQuality] = useState('');
+  const [status, setStatus] = useState(null); // Initially no status filter
 
   const handleApply = () => {
-    onApply({ category, fabricator, clothQuality });
+    onApply({ category, fabricator, clothQuality, status });
     onClose();
   };
+
   const handleCancel = () => {
     setCategory('');
     setFabricator('');
     setClothQuality('');
-    onClose();  // Close the modal and reset filters
+    setStatus(null); // Reset the status filter
+    onClose();
   };
 
   return (
@@ -21,7 +24,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div className="bg-white p-8 rounded shadow-lg max-w-sm w-full">
           <h2 className="text-xl font-semibold mb-4">Filter Options</h2>
-          
+
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1">Category</label>
             <input
@@ -31,7 +34,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
               className="w-full p-2 border rounded"
             />
           </div>
-          
+
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1">Fabricator</label>
             <input
@@ -41,7 +44,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
               className="w-full p-2 border rounded"
             />
           </div>
-          
+
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1">Cloth Quality</label>
             <input
@@ -51,7 +54,46 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
               className="w-full p-2 border rounded"
             />
           </div>
-          
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-1">Status</label>
+            <div className="flex items-center space-x-2">
+              <label>
+                <input
+                  type="radio"
+                  name="status"
+                  value="true"
+                  checked={status === true}
+                  onChange={() => setStatus(true)}
+                  className="mr-2"
+                />
+                Checked
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="status"
+                  value="false"
+                  checked={status === false}
+                  onChange={() => setStatus(false)}
+                  className="mr-2"
+                />
+                Unchecked
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="status"
+                  value=""
+                  checked={status === null}
+                  onChange={() => setStatus(null)}
+                  className="mr-2"
+                />
+                None
+              </label>
+            </div>
+          </div>
+
           <div className="flex justify-end space-x-4">
             <button
               onClick={handleCancel}
