@@ -116,6 +116,7 @@ const ReorderedItems = () => {
                   clothSaleRate={card.clothSaleRate}
                   fabrication={card.fabrication}
                   timestamp={card.createdAt}
+                  desc= {card.desc}
                 />
               ))
             )}

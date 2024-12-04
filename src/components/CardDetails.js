@@ -147,6 +147,9 @@ const CardDetails = () => {
               <span className="font-bold">Cloth Quality:</span> {product.clothQuality}
             </div>
             <div className="w-full sm:w-1/2 mb-4">
+              <span className="font-bold">Product Description</span> {product.desc}
+            </div>
+            <div className="w-full sm:w-1/2 mb-4">
               <span className="font-bold">Cloth Name:</span> {product.clothName}
             </div>
             <div className="w-full sm:w-1/2 mb-4">

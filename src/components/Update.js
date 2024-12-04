@@ -456,6 +456,18 @@ export default function UpdateItem() {
                                 placeholder="Enter MRP"
                             />
                         </div>
+                        <div className="w-full">
+                            <label htmlFor="desc" className="block mb-2 text-sm font-medium text-gray-900">Description</label>
+                            <textarea
+                                
+                                name="desc"
+                                id="desc"
+                                value={product.desc}
+                                onChange={handleChange}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                placeholder="Enter Description"
+                            />
+                        </div>
 
                         <div className="w-full">
                             <label htmlFor="fabrication" className="block mb-2 text-sm font-medium text-gray-900">Fabrication</label>

@@ -12,9 +12,6 @@ import { auth } from '../firebaseConfig';
 import SwsrModal from './SWSR';
 import { RotatingLines } from 'react-loader-spinner';
 
-
-
-
 export default function AddItem() {
     const categories = [
         { value: "print", label: "Print" },
@@ -78,6 +75,7 @@ export default function AddItem() {
         expenses: [],
         swpr:[],
         swsr:[],
+        desc:'',
         imageUrl:'',
         createdAt:Timestamp.now(),
     });
@@ -582,6 +580,17 @@ export default function AddItem() {
                                 onChange={handleChange}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="Enter MRP"
+                            />
+                        </div>
+                        <div className="w-full mt-5">
+                            <label htmlFor="desc" className="block mb-2 text-sm font-medium text-gray-900">Description</label>
+                            <textarea
+                                name="desc"
+                                id="desc"
+                                value={product.desc}
+                                onChange={handleChange}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                placeholder="Enter description"
                             />
                         </div>
                         <div className="w-full mt-5">

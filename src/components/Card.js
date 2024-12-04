@@ -4,7 +4,7 @@ import { collection, doc, setDoc, deleteDoc, query, where, getDocs } from 'fireb
 import { db, auth } from '../firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 
-export default function Card({ id, imag, jobslip, itemName, status, category = [], fabricator, clothname, quality, meter, onDelete, expenses = [], averagePiece, clothSaleRate, fabrication, timestamp }) {
+export default function Card({ id, imag, jobslip, itemName, status, category = [], fabricator, clothname, quality, meter, onDelete, expenses = [], averagePiece, clothSaleRate, fabrication, timestamp,desc }) {
   const [isReordered, setIsReordered] = useState(false);
   const [userId, setUserId] = useState(null);
 
