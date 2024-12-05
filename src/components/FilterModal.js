@@ -4,10 +4,13 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
   const [category, setCategory] = useState('');
   const [fabricator, setFabricator] = useState('');
   const [clothQuality, setClothQuality] = useState('');
+  const[clothAgent,setClothAgent]= useState('');
   const [status, setStatus] = useState(null); // Initially no status filter
+  const[clorsh,setClorsh]= useState(false);
+
 
   const handleApply = () => {
-    onApply({ category, fabricator, clothQuality, status });
+    onApply({ category, fabricator, clothQuality, status,clorsh,clothAgent });
     onClose();
   };
 
@@ -16,7 +19,9 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
     setFabricator('');
     setClothQuality('');
     setStatus(null); // Reset the status filter
-    onClose();
+    setClorsh(false);
+    setClothAgent('');
+    // onClose();
   };
 
   return (
@@ -51,6 +56,15 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
               type="text"
               value={clothQuality}
               onChange={(e) => setClothQuality(e.target.value)}
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-1">Cloth Agent</label>
+            <input
+              type="text"
+              value={clothAgent}
+              onChange={(e) => setClothAgent(e.target.value)}
               className="w-full p-2 border rounded"
             />
           </div>
@@ -91,6 +105,35 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
                 />
                 Both
               </label>
+            </div>
+          </div>
+          {/* clorsh */}
+          <div className="mb-4 p-3 border-t-2 border-black ">
+            <label className="block text-sm font-medium mb-1"> </label>
+            <div className="flex items-center space-x-2">
+              <label>
+                <input
+                  type="radio"
+                  name="clorsh"
+                  value="true"
+                  checked={clorsh === true}
+                  onChange={() => setClorsh(true)}
+                  className="mr-2"
+                />
+                SPO
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="clorsh"
+                  value="false"
+                  checked={clorsh === false}
+                  onChange={() => setClorsh(false)}
+                  className="mr-2"
+                />
+                CPO
+              </label>
+              
             </div>
           </div>
 

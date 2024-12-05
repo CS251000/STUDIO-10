@@ -11,42 +11,13 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import SwsrUpModal from './SWSRup';
 import { RotatingLines } from 'react-loader-spinner';
+import { categories } from '../lib/constants';
+import { expenses } from '../lib/constants';
+import { sizes } from '../lib/constants';
 
 export default function UpdateItem() {
     const { id } = useParams();
-    const categories = [
-        { value: "print", label: "Print" },
-        { value: "plain", label: "Plain" },
-        { value: "denim", label: "Denim" },
-        { value: "check", label: "Check" },
-        { value: "lycra", label: "Lycra" },
-        { value: "kurta", label: "Kurta" },
-        { value: "lining", label: "Lining" },
-    ];
-
-    const sizes = [
-        { value: 's', label: "S" },
-        { value: 'm', label: "M" },
-        { value: 'l', label: "L" },
-        { value: 'xl', label: "XL" },
-        { value: 'xxl', label: "XXL" },
-        { value: '2024', label: "20/24" },
-        { value: '2630', label: "26/30" },
-        { value: '3236', label: "32/36" },
-        { value: '38', label: "38" }
-    ];
-
-    const expenses = [
-        { value: 'washing', label: 'Washing' },
-        { value: 'kadhai', label: 'Kadhai' },
-        { value: 'pasting', label: 'Pasting' },
-        { value: 'button', label: 'Button' },
-        { value: 'design', label: 'Design' },
-        { value: 'print', label: 'Print' },
-        { value: 'id', label: 'ID' },
-        { value: 'double-pocket', label: 'Double Pocket' },
-        { value: 'others', label: 'Others' },
-    ];
+   
 
     const [userId, setUserId] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
@@ -60,12 +31,16 @@ export default function UpdateItem() {
         sizes: [],
         meter: '',
         status: false,
+        clorsh:false,//false = cl, true= sh
         clothQuality: '',
         clothName: '',
+        millName:'',
         clothPurchaseRate: '',
         clothSaleRate: '',
         averagePiece: '',
+        clothagent:'',
         mrp: '',
+        
         fabrication: '',
         discount: '',
         packingCharge: '',
@@ -144,6 +119,12 @@ export default function UpdateItem() {
         setProduct((prevProduct) => ({
             ...prevProduct,
             status: !prevProduct.status
+        }));
+    };
+    const handleCheckboxChange2 = () => {
+        setProduct((prevProduct) => ({
+            ...prevProduct,
+            clorsh: !prevProduct.clorsh
         }));
     };
 
@@ -276,7 +257,7 @@ export default function UpdateItem() {
     const cp = product.clothSaleRate - product.clothPurchaseRate - 2;
 
     return (
-        <section className="bg-white">
+        <section className="bg-white p-3">
             <div className="max-w-2xl mx-auto py-8">
                 <h2 className="text-2xl font-bold mb-6">Update Product</h2>
 
@@ -352,7 +333,7 @@ export default function UpdateItem() {
                         </div>
 
                         <div className="w-full">
-                            <label htmlFor="meter" className="block mb-2 text-sm font-medium text-gray-900">Meter</label>
+                            <label htmlFor="meter" className="block mb-2 text-sm font-medium text-gray-900">Cloth Meter</label>
                             <input
                                 type="text"
                                 name="meter"
@@ -361,6 +342,19 @@ export default function UpdateItem() {
                                 onChange={handleChange}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="Enter meter"
+                                
+                            />
+                        </div>
+                        <div className="w-full">
+                            <label htmlFor="meter" className="block mb-2 text-sm font-medium text-gray-900">Cloth Agent</label>
+                            <input
+                                type="text"
+                                name="clothagent"
+                                id="clothagent"
+                                value={product.clothagent}
+                                onChange={handleChange}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                placeholder="Update agent"
                                 
                             />
                         </div>
@@ -375,6 +369,21 @@ export default function UpdateItem() {
                                 onChange={handleCheckboxChange}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block"
                             />
+                        </div>
+
+                        <div className="w-full">
+                            <label className="inline-flex items-center mb-5 cursor-pointer">
+                            <span className="ms-3 me-3 text-lg font-large text-gray-900">CPO</span>
+                                <input
+                                    type="checkbox"
+                                    name="clorsh"
+                                    checked={product.clorsh}
+                                    onChange={handleCheckboxChange2}
+                                    className="sr-only peer"
+                                />
+                                <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                <span className="ms-3 text-lg font-large text-gray-900">SPO</span>
+                            </label>
                         </div>
 
                         <div className="w-full">
@@ -401,6 +410,19 @@ export default function UpdateItem() {
                                 onChange={handleChange}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="Enter cloth name"
+                                
+                            />
+                        </div>
+                        <div className="w-full">
+                            <label htmlFor="millName" className="block mb-2 text-sm font-medium text-gray-900">Mill Name</label>
+                            <input
+                                type="text"
+                                name="millName"
+                                id="millName"
+                                value={product.millName}
+                                onChange={handleChange}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                placeholder="Enter Mill name"
                                 
                             />
                         </div>

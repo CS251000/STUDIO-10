@@ -1,19 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { sizes } from '../lib/constants';
 
 export default function SwsrInfo({ selectedSizes, selectedSwsr }) {
-  const sizes = [
-    { value: 's', label: "S" },
-    { value: 'm', label: "M" },
-    { value: 'l', label: "L" },
-    { value: 'xl', label: "XL" },
-    { value: 'xxl', label: "XXL" },
-    { value: '2024', label: "20/24" },
-    { value: '2630', label: "26/30" },
-    { value: '3236', label: "32/36" },
-    { value: '38', label: "38" }
-
-
-];
+  
 
   const swsrmap = sizes.map(size => {
     const index = selectedSizes.indexOf(size.value);

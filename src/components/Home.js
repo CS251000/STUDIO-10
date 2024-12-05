@@ -1,11 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { useOutletContext } from 'react-router-dom';
-import Card from './Card';
-import { db, auth, storage } from '../firebaseConfig';
-import { collection, getDocs, deleteDoc, query, orderBy, where, doc, getDoc } from 'firebase/firestore';
-import { ref, deleteObject } from 'firebase/storage';
-import { onAuthStateChanged } from 'firebase/auth';
-import FilterModal from './FilterModal';
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
+import Card from "./Card";
+import { db, auth, storage } from "../firebaseConfig";
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  query,
+  orderBy,
+  where,
+  doc,
+  getDoc,
+} from "firebase/firestore";
+import { ref, deleteObject } from "firebase/storage";
+import { onAuthStateChanged } from "firebase/auth";
+import FilterModal from "./FilterModal";
 
 export default function Home() {
   const { searchQuery } = useOutletContext();
@@ -13,11 +22,13 @@ export default function Home() {
   const [userId, setUserId] = useState(null);
 
   // State to manage filters and modal visibility
-  const [filterCategory, setFilterCategory] = useState('');
-  const [filterFabricator, setFilterFabricator] = useState('');
-  const [filterClothQuality, setFilterClothQuality] = useState('');
-  const [filterStatus,setFilterStatus]= useState(null);
+  const [filterCategory, setFilterCategory] = useState("");
+  const [filterFabricator, setFilterFabricator] = useState("");
+  const [filterClothQuality, setFilterClothQuality] = useState("");
+  const [filterStatus, setFilterStatus] = useState(null);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [filterClorsh, setFilterClorsh] = useState(false);
+  const[filterAgent,setFilterAgent]= useState("");
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -35,49 +46,88 @@ export default function Home() {
         try {
           // Fetch all products for the user
           let q = query(
-            collection(db, 'products'),
-            where('user', '==', userId),
-            orderBy('createdAt', 'desc')
+            collection(db, "products"),
+            where("user", "==", userId),
+            orderBy("createdAt", "desc")
           );
 
           const querySnapshot = await getDocs(q);
-          const products = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          console.log("Fetched products:", products); // Log the fetched products
+          const products = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          // console.log("Fetched products:", products);
 
           // Apply filters locally (case-insensitive, partial matching)
-          const filteredProducts = products.filter(product => {
-            const matchesCategory = filterCategory 
-              ? String(product.category || '').toLowerCase().includes(filterCategory.toLowerCase())
+          const filteredProducts = products.filter((product) => {
+            const matchesCategory = filterCategory
+              ? String(product.category || "")
+                  .toLowerCase()
+                  .includes(filterCategory.toLowerCase())
               : true;
             const matchesFabricator = filterFabricator
-              ? (product.fabricator || '').toLowerCase().includes(filterFabricator.toLowerCase())
+              ? (product.fabricator || "")
+                  .toLowerCase()
+                  .includes(filterFabricator.toLowerCase())
               : true;
             const matchesClothQuality = filterClothQuality
-              ? (product.clothQuality || '').toLowerCase().includes(filterClothQuality.toLowerCase())
+              ? (product.clothQuality || "")
+                  .toLowerCase()
+                  .includes(filterClothQuality.toLowerCase())
               : true;
-            const matchesStatus = filterStatus !== null
-              ? product.status === filterStatus
+              const matchesAgent = filterAgent
+              ? (product.clothagent || "")
+                  .toLowerCase()
+                  .includes(filterAgent.toLowerCase())
               : true;
 
-            return matchesCategory && matchesFabricator && matchesClothQuality && matchesStatus;
+
+            const matchesStatus =
+              filterStatus !== null ? product.status === filterStatus : true;
+            const matchesClorsh =
+              filterClorsh !== null
+                ? product.clorsh === null ||
+                  product.clorsh === undefined ||
+                  product.clorsh === false
+                  ? filterClorsh === false
+                  : product.clorsh === filterClorsh
+                : true;
+
+            return (
+              matchesCategory &&
+              matchesFabricator &&
+              matchesClothQuality &&
+              matchesStatus &&
+              matchesClorsh&&
+              matchesAgent
+            );
           });
-          console.log("Filtered products:", filteredProducts); // Log the filtered products
 
           setData(filteredProducts);
         } catch (error) {
-          console.error('Error fetching data: ', error);
+          console.error("Error fetching data: ", error);
         }
       }
     };
 
     fetchData();
-  }, [userId, filterCategory, filterFabricator, filterClothQuality,filterStatus]);
+  }, [
+    userId,
+    filterCategory,
+    filterFabricator,
+    filterClothQuality,
+    filterStatus,
+    filterClorsh,
+    filterAgent
+  ]);
 
   const handleDelete = async (id) => {
-    const confirmed = window.confirm("Are you sure you want to delete this item?");
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this item?"
+    );
     if (confirmed) {
       try {
-        const docRef = doc(db, 'products', id);
+        const docRef = doc(db, "products", id);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
@@ -88,36 +138,36 @@ export default function Home() {
             const storageRef = ref(storage, imageUrl);
             try {
               await deleteObject(storageRef);
-              console.log('Image deleted successfully');
+              console.log("Image deleted successfully");
             } catch (error) {
-              console.error('Error deleting image: ', error);
+              console.error("Error deleting image: ", error);
             }
           }
 
           await deleteDoc(docRef);
 
-          const reorderedItemsRef = collection(db, 'reorderedItems');
-          const q = query(reorderedItemsRef, where('itemId', '==', id));
+          const reorderedItemsRef = collection(db, "reorderedItems");
+          const q = query(reorderedItemsRef, where("itemId", "==", id));
           const reorderedSnapshot = await getDocs(q);
 
           if (!reorderedSnapshot.empty) {
             const reorderedItemDoc = reorderedSnapshot.docs[0];
-            await deleteDoc(doc(db, 'reorderedItems', reorderedItemDoc.id));
-            console.log('Reordered item deleted successfully');
+            await deleteDoc(doc(db, "reorderedItems", reorderedItemDoc.id));
+            console.log("Reordered item deleted successfully");
           }
 
-          setData(prevData => prevData.filter(item => item.id !== id));
-          console.log('Document deleted successfully');
+          setData((prevData) => prevData.filter((item) => item.id !== id));
+          console.log("Document deleted successfully");
         } else {
-          console.log('No such document!');
+          console.log("No such document!");
         }
       } catch (error) {
-        console.error('Error deleting document or image: ', error);
+        console.error("Error deleting document or image: ", error);
       }
     }
   };
 
-  const filteredData = data.filter(item => {
+  const filteredData = data.filter((item) => {
     console.log("Filtering item:", item); // Log each item before filtering
     return (
       item.itemName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -129,12 +179,30 @@ export default function Home() {
     );
   });
 
-  const handleApplyFilters = ({ category, fabricator, clothQuality,status }) => {
+  const handleApplyFilters = ({ category, fabricator, clothQuality, status, clorsh,clothAgent }) => {
+    const filterState = { category, fabricator, clothQuality, status, clorsh,clothAgent };
+    localStorage.setItem('filters', JSON.stringify(filterState)); 
     setFilterCategory(category);
     setFilterFabricator(fabricator);
     setFilterClothQuality(clothQuality);
     setFilterStatus(status);
+    setFilterClorsh(clorsh);
+    setFilterAgent(clothAgent)
   };
+  useEffect(() => {
+    const savedFilters = localStorage.getItem('filters');
+    if (savedFilters) {
+      const { category, fabricator, clothQuality, status, clorsh,clothAgent } = JSON.parse(savedFilters);
+      setFilterCategory(category || '');
+      setFilterFabricator(fabricator || '');
+      setFilterClothQuality(clothQuality || '');
+      setFilterStatus(status !== undefined ? status : null);
+      setFilterClorsh(clorsh !== undefined ? clorsh : false);
+      setFilterAgent(clothAgent||'');
+    }
+  }, []);
+  
+  
 
   return (
     <div className="container mx-auto px-4 mt-4">
@@ -170,7 +238,7 @@ export default function Home() {
             clothSaleRate={card.clothSaleRate}
             fabrication={card.fabrication}
             timestamp={card.createdAt}
-            desc = {card.desc}
+            desc={card.desc}
           />
         ))}
       </div>

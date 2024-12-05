@@ -132,6 +132,9 @@ const CardDetails = () => {
               <span className="font-bold">Job Slip:</span> {product.jobslip}
             </div>
             <div className="w-full sm:w-1/2 mb-4">
+              <span className="font-bold">CPO/SPO: </span>{product.clorsh ?"SPO":"CPO"}
+            </div>
+            <div className="w-full sm:w-1/2 mb-4">
               <span className="font-bold">Fabricator:</span> {product.fabricator}
             </div>
             <div className="w-full sm:w-1/2 mb-4">
@@ -144,6 +147,9 @@ const CardDetails = () => {
               <span className="font-bold">Meter:</span> {product.meter}
             </div>
             <div className="w-full sm:w-1/2 mb-4">
+              <span className="font-bold">Cloth Agent:</span> {product.clothagent}
+            </div>
+            <div className="w-full sm:w-1/2 mb-4">
               <span className="font-bold">Cloth Quality:</span> {product.clothQuality}
             </div>
             <div className="w-full sm:w-1/2 mb-4">
@@ -151,6 +157,9 @@ const CardDetails = () => {
             </div>
             <div className="w-full sm:w-1/2 mb-4">
               <span className="font-bold">Cloth Name:</span> {product.clothName}
+            </div>
+            <div className="w-full sm:w-1/2 mb-4">
+              <span className="font-bold">Mill Name:</span> {product.millName}
             </div>
             <div className="w-full sm:w-1/2 mb-4">
               <span className="font-bold">Cloth Purchase Rate:</span> {product.clothPurchaseRate}
@@ -182,9 +191,12 @@ const CardDetails = () => {
             <div className="w-full sm:w-1/2 mb-4">
               <span className="font-bold">Cloth Profit:</span> {clothProfit}
             </div>
-            <div className="flex flex-row justify-center items-center gap-5 mb-2">
+            <div className="flex flex-row justify-center items-center gap-5 mb-2 lg:ml-5 mt-5 lg:mt-0">
               <ExpenseInfo expensesvalue={product.expenses} />
               <QuantityInfo selectedSizes={product.sizes} selectedQuantities={product.quantities} />
+              </div>
+              <div className="flex flex-row justify-center items-center gap-5 mb-2 lg:ml-5 mt-5 lg:mt-0">
+              
               <SwprInfo selectedSizes={product.sizes} selectedSwpr={product.swpr} />
               <SwsrInfo selectedSizes={product.sizes} selectedSwsr={product.swsr} />
             </div>
