@@ -4,13 +4,12 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
   const [category, setCategory] = useState('');
   const [fabricator, setFabricator] = useState('');
   const [clothQuality, setClothQuality] = useState('');
-  const[clothAgent,setClothAgent]= useState('');
+  const [clothAgent, setClothAgent] = useState('');
   const [status, setStatus] = useState(null); // Initially no status filter
-  const[clorsh,setClorsh]= useState(false);
-
+  const [clorsh, setClorsh] = useState(null);
 
   const handleApply = () => {
-    onApply({ category, fabricator, clothQuality, status,clorsh,clothAgent });
+    onApply({ category, fabricator, clothQuality, status, clorsh, clothAgent });
     onClose();
   };
 
@@ -19,9 +18,8 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
     setFabricator('');
     setClothQuality('');
     setStatus(null); // Reset the status filter
-    setClorsh(false);
+    setClorsh(null);
     setClothAgent('');
-    // onClose();
   };
 
   return (
@@ -30,45 +28,83 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
         <div className="bg-white p-8 rounded shadow-lg max-w-sm w-full">
           <h2 className="text-xl font-semibold mb-4">Filter Options</h2>
 
-          <div className="mb-4">
+          {/* Category Field */}
+          <div className="mb-4 relative">
             <label className="block text-sm font-medium mb-1">Category</label>
             <input
               type="text"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded pr-10"
             />
+            {category && (
+              <button
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
+                onClick={() => setCategory('')}
+              >
+                &times;
+              </button>
+            )}
           </div>
 
-          <div className="mb-4">
+          {/* Fabricator Field */}
+          <div className="mb-4 relative">
             <label className="block text-sm font-medium mb-1">Fabricator</label>
             <input
               type="text"
               value={fabricator}
               onChange={(e) => setFabricator(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded pr-10"
             />
+            {fabricator && (
+              <button
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
+                onClick={() => setFabricator('')}
+              >
+                &times;
+              </button>
+            )}
           </div>
 
-          <div className="mb-4">
+          {/* Cloth Quality Field */}
+          <div className="mb-4 relative">
             <label className="block text-sm font-medium mb-1">Cloth Quality</label>
             <input
               type="text"
               value={clothQuality}
               onChange={(e) => setClothQuality(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded pr-10"
             />
+            {clothQuality && (
+              <button
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
+                onClick={() => setClothQuality('')}
+              >
+                &times;
+              </button>
+            )}
           </div>
-          <div className="mb-4">
+
+          {/* Cloth Agent Field */}
+          <div className="mb-4 relative">
             <label className="block text-sm font-medium mb-1">Cloth Agent</label>
             <input
               type="text"
               value={clothAgent}
               onChange={(e) => setClothAgent(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded pr-10"
             />
+            {clothAgent && (
+              <button
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
+                onClick={() => setClothAgent('')}
+              >
+                &times;
+              </button>
+            )}
           </div>
 
+          {/* Status Field */}
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1">Status</label>
             <div className="flex items-center space-x-2">
@@ -107,9 +143,10 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
               </label>
             </div>
           </div>
-          {/* clorsh */}
-          <div className="mb-4 p-3 border-t-2 border-black ">
-            <label className="block text-sm font-medium mb-1"> </label>
+
+          {/* Clorsh Field */}
+          <div className="mb-4 p-3 border-t-2 border-black">
+            <label className="block text-sm font-medium mb-1">Clorsh</label>
             <div className="flex items-center space-x-2">
               <label>
                 <input
@@ -133,10 +170,21 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
                 />
                 CPO
               </label>
-              
+              <label>
+                <input
+                  type="radio"
+                  name="clorsh"
+                  value=""
+                  checked={clorsh === null}
+                  onChange={() => setClorsh(null)}
+                  className="mr-2"
+                />
+                Both
+              </label>
             </div>
           </div>
 
+          {/* Action Buttons */}
           <div className="flex justify-end space-x-4">
             <button
               onClick={handleCancel}

@@ -4,7 +4,7 @@ import { collection, doc, setDoc, deleteDoc, query, where, getDocs } from 'fireb
 import { db, auth } from '../firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 
-export default function Card({ id, imag, jobslip, itemName, status, category = [], fabricator, clothname, quality, meter, onDelete, expenses = [], averagePiece, clothSaleRate, fabrication, timestamp,desc }) {
+export default function Card({ id, imag, jobslip, itemName, status, category = [], fabricator, clothname, quality, meter, onDelete, expenses = [], averagePiece, clothSaleRate, fabrication, timestamp,desc,clorsh }) {
   const [isReordered, setIsReordered] = useState(false);
   const [userId, setUserId] = useState(null);
 
@@ -76,7 +76,7 @@ export default function Card({ id, imag, jobslip, itemName, status, category = [
   }
 
   return (
-    <div className={`max-w-sm border rounded-lg shadow border-gray-700 ${status ? 'bg-yellow-100' : 'bg-white'}`}>
+    <div className={`max-w-sm border rounded-lg shadow border-gray-700 ${status ? 'bg-yellow-100' : (!clorsh?'bg-green-300':'bg-white')}`}>
       
       {imag ? (
   <img
@@ -92,6 +92,9 @@ export default function Card({ id, imag, jobslip, itemName, status, category = [
         
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-blue-700">
           Job Slip: &nbsp; <span className="text-black text-md font-normal">{jobslip}</span>
+        </h5>
+        <h5 className="mb-2 text-2xl font-bold tracking-tight text-black-700">
+          <span className="text-white bg-black p-2 rounded-xl text-md font-normal">{clorsh?'SPO':'CPO'}</span>
         </h5>
         <button
             type="button"

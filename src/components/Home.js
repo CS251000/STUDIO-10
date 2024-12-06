@@ -84,14 +84,16 @@ export default function Home() {
 
             const matchesStatus =
               filterStatus !== null ? product.status === filterStatus : true;
+
             const matchesClorsh =
-              filterClorsh !== null
-                ? product.clorsh === null ||
-                  product.clorsh === undefined ||
-                  product.clorsh === false
-                  ? filterClorsh === false
-                  : product.clorsh === filterClorsh
-                : true;
+              // filterClorsh !== null
+              //   ? product.clorsh === null ||
+              //     product.clorsh === undefined ||
+              //     product.clorsh === false
+              //     ? filterClorsh === false
+              //     : product.clorsh === filterClorsh
+              //   : true;
+              filterClorsh!==null?product.clorsh===filterClorsh:true;
 
             return (
               matchesCategory &&
@@ -239,6 +241,7 @@ export default function Home() {
             fabrication={card.fabrication}
             timestamp={card.createdAt}
             desc={card.desc}
+            clorsh={card.clorsh}
           />
         ))}
       </div>
