@@ -108,7 +108,8 @@ export default function Card({ id, imag, jobslip, itemName, status, category = [
         <p className="mb-3 font-normal text-gray-700">Category: {category.join(' , ')}</p>
         <p className="mb-3 font-normal text-gray-700">Fabricator: {fabricator}</p>
         <p className="mb-3 font-normal text-gray-700">Cloth Name: {clothname}</p>
-        <p className="mb-3 font-normal text-gray-700">Cloth Quality: {quality}</p>
+        {/* <p className="mb-3 font-normal text-gray-700">Cloth Quality: {quality}</p> */}
+        <p className="mb-3 font-normal text-gray-700">Cloth Meter: {meter}</p>
         <p className="mb-3 font-normal text-gray-700">Rate Costing: {rateCost}</p>
         <p className="mb-3 font-normal text-gray-700">Cloth Sale Rate: {clothSaleRate}</p>
 
