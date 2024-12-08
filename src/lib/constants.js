@@ -6,6 +6,8 @@ export const categories = [
     { value: "lycra", label: "Lycra" },
     { value: "kurta", label: "Kurta" },
     { value: "lining", label: "Lining" },
+    { value: "rfd", label: "RFD" },
+    { value: "dobby", label: "Dobby" },
     
 ];
 
