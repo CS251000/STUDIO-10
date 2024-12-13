@@ -5,7 +5,7 @@ import ExpenseUpModal from './ExpenseUp';
 import { db, storage } from '../firebaseConfig';
 import {  doc, getDoc, updateDoc, Timestamp } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams} from 'react-router-dom';
 import SwprUpModal from './SWPRUP';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
@@ -14,9 +14,11 @@ import { RotatingLines } from 'react-loader-spinner';
 import { categories } from '../lib/constants';
 import { expenses } from '../lib/constants';
 import { sizes } from '../lib/constants';
+import { getFields, getSuggestions, saveField } from "../idb";
 
 export default function UpdateItem() {
     const { id } = useParams();
+    
    
 
     const [userId, setUserId] = useState(null);
@@ -40,7 +42,6 @@ export default function UpdateItem() {
         averagePiece: '',
         clothagent:'',
         mrp: '',
-        
         fabrication: '',
         discount: '',
         packingCharge: '',
@@ -51,6 +52,9 @@ export default function UpdateItem() {
         imageUrl: '',
         createdAt: Timestamp.now(),
     });
+
+      
+      
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -93,13 +97,58 @@ export default function UpdateItem() {
     const [isSWPRModalOpen, setIsSwprModalOpen] = useState(false);
     const [isSWSRModalOpen, setIsSwsrModalOpen] = useState(false);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setProduct((prevProduct) => ({
-            ...prevProduct,
-            [name]: value
-        }));
+
+  const [cachedFields, setCachedFields] = useState({});
+
+  useEffect(() => {
+    const loadCachedFields = async () => {
+      const fields = await getFields();
+      const fieldMap = fields.reduce((acc, { fieldName, value }) => {
+        acc[fieldName] = value;
+        return acc;
+      }, {});
+      setCachedFields(fieldMap);
     };
+
+    loadCachedFields();
+  }, []);
+
+  const [suggestions, setSuggestions] = useState({});
+
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
+    setProduct((prev) => ({ ...prev, [name]: value }));
+
+    if (value.trim() !== "") {
+        // Fetch suggestions if input has value
+        const fetchedSuggestions = await getSuggestions(name, value);
+        setSuggestions((prev) => ({ ...prev, [name]: fetchedSuggestions }));
+    } else {
+        // Clear suggestions if input is empty
+        setSuggestions((prev) => ({ ...prev, [name]: [] }));
+    }
+};
+
+
+  const handleBlur = async (e) => {
+    const { name, value } = e.target;
+    if (value.trim()) {
+      await saveField(name, value);
+    }
+
+    setTimeout(() => {
+        setSuggestions((prev) => ({ ...prev, [name]: [] }));
+    }, 150);
+  };
+
+  const handleSuggestionClick = (name, item) => {
+    setProduct((prev) => ({
+        ...prev,
+        [name]: item,
+    }));
+    // Clear suggestions after selection
+    setSuggestions((prev) => ({ ...prev, [name]: [] }));
+};
 
     const handleCategoryChange = (selectedOptions) => {
         setProduct((prevProduct) => ({
@@ -161,12 +210,17 @@ export default function UpdateItem() {
             swpr: swprValues
         }));
     };
-
     const handleSwsrSave = (swsrValues) => {
         setProduct((prevProduct) => ({
             ...prevProduct,
             swsr: swsrValues
         }));
+        const avg=swsrValues.reduce((acc,value)=>acc+value,0)/swsrValues.length;
+        setProduct((prevProduct) => ({
+            ...prevProduct,
+            mrp:`${parseFloat(avg.toFixed(2))*3}`
+        }));
+
     };
 
     const handleExpenseSave = (expenseValues) => {
@@ -271,10 +325,25 @@ export default function UpdateItem() {
                                 id="itemName"
                                 value={product.itemName}
                                 onChange={handleChange}
+                                onBlur={handleBlur}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="Enter item name"
                                 
                             />
+                            {suggestions.itemName &&
+                suggestions.itemName.length > 0 && (
+                  <ul className="absolute z-10 bg-slate-800 border border-gray-300 mt-1 w-auto rounded-md shadow-md max-h-40 overflow-y-auto text-white">
+                    {suggestions.itemName.map((item, index) => (
+                      <li
+                        key={index}
+                        onClick={() => handleSuggestionClick("itemName", item)}
+                        className="p-2 hover:bg-gray-600 text-white cursor-pointer"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )}
                         </div>
 
                         <div className="w-full">
@@ -299,10 +368,25 @@ export default function UpdateItem() {
                                 id="fabricator"
                                 value={product.fabricator}
                                 onChange={handleChange}
+                                onBlur={handleBlur}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="Enter fabricator"
                                 
                             />
+                            {suggestions.fabricator &&
+                suggestions.fabricator.length > 0 && (
+                  <ul className="absolute z-10 bg-slate-800 border border-gray-300 mt-1 w-auto rounded-md shadow-md max-h-40 overflow-y-auto text-white">
+                    {suggestions.fabricator.map((item, index) => (
+                      <li
+                        key={index}
+                        onClick={() => handleSuggestionClick("fabricator", item)}
+                        className="p-2 hover:bg-gray-600 text-white cursor-pointer"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )}
                         </div>
 
                         <div className="w-full">
@@ -353,10 +437,25 @@ export default function UpdateItem() {
                                 id="clothagent"
                                 value={product.clothagent}
                                 onChange={handleChange}
+                                onBlur={handleBlur}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="Update agent"
                                 
                             />
+                            {suggestions.clothagent &&
+                suggestions.clothagent.length > 0 && (
+                  <ul className="absolute z-10 bg-slate-800 border border-gray-300 mt-1 w-auto rounded-md shadow-md max-h-40 overflow-y-auto text-white">
+                    {suggestions.clothagent.map((item, index) => (
+                      <li
+                        key={index}
+                        onClick={() => handleSuggestionClick("clothagent", item)}
+                        className="p-2 hover:bg-gray-600 text-white cursor-pointer"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )}
                         </div>
 
                         <div className="w-full">
@@ -394,10 +493,25 @@ export default function UpdateItem() {
                                 id="clothQuality"
                                 value={product.clothQuality}
                                 onChange={handleChange}
+                                onBlur={handleBlur}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="Enter cloth quality"
                                 
                             />
+                            {suggestions.clothQuality &&
+                suggestions.clothQuality.length > 0 && (
+                  <ul className="absolute z-10 bg-slate-800 border border-gray-300 mt-1 w-auto rounded-md shadow-md max-h-40 overflow-y-auto text-white">
+                    {suggestions.clothQuality.map((item, index) => (
+                      <li
+                        key={index}
+                        onClick={() => handleSuggestionClick("clothQuality", item)}
+                        className="p-2 hover:bg-gray-600 text-white cursor-pointer"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )}
                         </div>
 
                         <div className="w-full">
@@ -408,12 +522,27 @@ export default function UpdateItem() {
                                 id="clothName"
                                 value={product.clothName}
                                 onChange={handleChange}
+                                onBlur={handleBlur}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="Enter cloth name"
                                 
                             />
+                            {suggestions.clothName &&
+                suggestions.clothName.length > 0 && (
+                  <ul className="absolute z-10 bg-slate-800 border border-gray-300 mt-1 w-auto rounded-md shadow-md max-h-40 overflow-y-auto text-white">
+                    {suggestions.clothName.map((item, index) => (
+                      <li
+                        key={index}
+                        onClick={() => handleSuggestionClick("clothName", item)}
+                        className="p-2 hover:bg-gray-600 text-white cursor-pointer"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )}
                         </div>
-                        <div className="w-full">
+                        {/* <div className="w-full">
                             <label htmlFor="millName" className="block mb-2 text-sm font-medium text-gray-900">Mill Name</label>
                             <input
                                 type="text"
@@ -425,7 +554,7 @@ export default function UpdateItem() {
                                 placeholder="Enter Mill name"
                                 
                             />
-                        </div>
+                        </div> */}
 
                         <div className="w-full">
                             <label htmlFor="clothPurchaseRate" className="block mb-2 text-sm font-medium text-gray-900">Cloth Purchase Rate</label>
@@ -551,6 +680,9 @@ export default function UpdateItem() {
                             availableExpenses={expenses}
                         />
                     </div>
+                    <div>
+                                <span className="font-semibold">Rate Cost:</span> {ratecost}
+                            </div>
 
                     <div className="mt-6">
                         <h3 className="text-lg font-medium mb-4">SWPR</h3>
@@ -582,6 +714,7 @@ export default function UpdateItem() {
                                 name="mrp"
                                 id="mrp"
                                 value={product.mrp}
+                                // value={newmrp}
                                 onChange={handleChange}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="Enter MRP"
@@ -609,9 +742,7 @@ export default function UpdateItem() {
                     <div className="mt-6">
                         <h3 className="text-lg font-medium mb-4">Calculated Costs</h3>
                         <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <span className="font-semibold">Rate Cost:</span> {ratecost}
-                            </div>
+                            
                             <div>
                                 <span className="font-semibold">Net Profit:</span> {np.toFixed(2)}
                             </div>
