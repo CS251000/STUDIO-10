@@ -8,6 +8,13 @@ export default function Card({ id, imag, jobslip, itemName, status, category = [
   const [isReordered, setIsReordered] = useState(false);
   const [userId, setUserId] = useState(null);
 
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [password, setPassword] = useState('');
+  const [actionType, setActionType] = useState(''); // "update" or "delete"
+  const [error, setError] = useState('');
+
+  const PASSWORD="727630";
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -60,6 +67,26 @@ export default function Card({ id, imag, jobslip, itemName, status, category = [
     } catch (error) {
       console.error('Error handling reorder:', error);
     }
+  };
+
+  const handlePasswordSubmit = () => {
+    if (password === PASSWORD) {
+      if (actionType === 'delete') {
+        onDelete(id); // Call the delete handler
+      } else if (actionType === 'update') {
+        window.location.href = `/update/${id}`; // Redirect to the update page
+      }
+      setShowPasswordModal(false);
+      setPassword('');
+      setError('');
+    } else {
+      setError('Incorrect password. Please try again.');
+    }
+  };
+
+  const handleAction = (type) => {
+    setActionType(type);
+    setShowPasswordModal(true);
   };
 
   const totalExpenses = expenses.reduce((acc, value) => acc + (value || 0), 0);
@@ -117,16 +144,49 @@ export default function Card({ id, imag, jobslip, itemName, status, category = [
           <Link to={`/${id}`}>
             <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Info</button>
           </Link>
-          <Link to={`/update/${id}`}>
-            <button type="button" className="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Update</button>
-          </Link>
+          
+            <button type="button" 
+            className="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+            onClick={()=>handleAction('update')}
+            >Update</button>
+          
           <button
             type="button"
-            onClick={() => onDelete(id)}
+            onClick={() => handleAction('delete')}
             className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
           >
             Delete
           </button>
+
+          {showPasswordModal && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow p-6 w-80">
+            <h3 className="text-xl font-bold mb-4">Enter Password</h3>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border rounded p-2 mb-4"
+              placeholder="Enter your password"
+            />
+            {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+            <div className="flex justify-end">
+              <button
+                onClick={handlePasswordSubmit}
+                className="text-white bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded mr-2"
+              >
+                Submit
+              </button>
+              <button
+                onClick={() => setShowPasswordModal(false)}
+                className="text-white bg-red-700 hover:bg-red-800 px-4 py-2 rounded"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
           
         </div>
       </div>
