@@ -123,6 +123,8 @@ export default function Home() {
     filterAgent
   ]);
 
+  
+
   const handleDelete = async (id) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this item?"
@@ -180,6 +182,10 @@ export default function Home() {
       item.clothQuality.toLowerCase().includes(searchQuery.toLowerCase())
     );
   });
+  const totalMeter = filteredData.reduce((sum, item) => {
+    const meterValue = parseFloat(item.meter) || 0; // Ensure meter is a number
+    return sum + meterValue;
+  }, 0);
 
   const handleApplyFilters = ({ category, fabricator, clothQuality, status, clorsh,clothAgent }) => {
     const filterState = { category, fabricator, clothQuality, status, clorsh,clothAgent };
@@ -219,6 +225,9 @@ export default function Home() {
         onClose={() => setIsFilterModalOpen(false)}
         onApply={handleApplyFilters}
       />
+      <div className="my-4 text-xl font-bold text-gray-700">
+        Total Meter: {totalMeter.toFixed(2)}
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4">
         {filteredData.map((card) => (
           <Card
