@@ -8,7 +8,9 @@ export const categories = [
     { value: "lining", label: "Lining" },
     { value: "rfd", label: "RFD" },
     { value: "dobby", label: "Dobby" },
-    { value: "surat", label: "Surat" }
+    { value: "surat", label: "Surat" },
+    {value:"chirag",label:"Chirag"},
+    {value:"studio",label:"Studio"},
     
 ];
 
