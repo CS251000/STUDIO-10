@@ -93,14 +93,24 @@ export default function Card({ id, imag, jobslip, itemName, status, category = [
   const rateCost = (Number(averagePiece) * Number(clothSaleRate) + Number(totalExpenses) + Number(fabrication)).toFixed(2);
 
   let formattedDate = 'N/A';
-  if (timestamp && typeof timestamp.toDate === 'function') {
-    const date = timestamp.toDate();
-    formattedDate = date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  }
+
+if (timestamp && typeof timestamp.toDate === 'function') {
+  // If it's a Firebase Timestamp
+  const date = timestamp.toDate();
+  formattedDate = date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+} else if (timestamp && !isNaN(Date.parse(timestamp))) {
+  
+  const date = new Date(timestamp);
+  formattedDate = date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
 
   return (
     <div className={`max-w-sm border rounded-lg shadow border-gray-700 ${status ? 'bg-yellow-100' : (!clorsh?'bg-green-300':'bg-white')}`}>

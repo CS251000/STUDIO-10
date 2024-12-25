@@ -95,6 +95,27 @@ const CardDetails = () => {
     return <div>No product found</div>;
   }
 
+  let formattedDate = 'N/A';
+  let timestamp=product.createdAt;
+
+if (timestamp && typeof timestamp.toDate === 'function') {
+  // If it's a Firebase Timestamp
+  const date = timestamp.toDate();
+  formattedDate = date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+} else if (timestamp && !isNaN(Date.parse(timestamp))) {
+  
+  const date = new Date(timestamp);
+  formattedDate = date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
   const totalExpenses = product.expenses.reduce((acc, value) => acc + (value || 0), 0);
   const rateCost = (Number(product.averagePiece) * Number(product.clothSaleRate) + Number(totalExpenses) + Number(product.fabrication)).toFixed(2);
 
@@ -169,6 +190,9 @@ const CardDetails = () => {
             </div>
             <div className="w-full sm:w-1/2 mb-4">
               <span className="font-bold">Average Piece:</span> {product.averagePiece}
+            </div>
+            <div className="w-full sm:w-1/2 mb-4">
+              <span className="font-bold">Date:</span> {formattedDate}
             </div>
             <div className="w-full sm:w-1/2 mb-4">
               <span className="font-bold">MRP:</span> {product.mrp}

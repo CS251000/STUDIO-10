@@ -102,6 +102,14 @@ export default function AddItem() {
     }
 };
 
+const handleDateChange = (event) => {
+  const { name, value } = event.target;
+  setProduct((prevData) => ({
+    ...prevData,
+    [name]: value,
+  }));
+};
+
 
   const handleBlur = async (e) => {
     const { name, value } = e.target;
@@ -378,6 +386,23 @@ export default function AddItem() {
                 onChange={handleChange}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 placeholder="Enter slip no..."
+              />
+            </div>
+            <div className="w-full">
+              <label
+                htmlFor="createdAt"
+                className="block mb-2 text-sm font-medium text-gray-900"
+              >
+                Enter Date
+              </label>
+              <input
+                type="date"
+                name="createdAt"
+                id="createdAt"
+                value={product.createdAt}
+                onChange={handleDateChange}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                
               />
             </div>
             <div className="w-full">

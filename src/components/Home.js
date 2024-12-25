@@ -29,6 +29,7 @@ export default function Home() {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [filterClorsh, setFilterClorsh] = useState(false);
   const[filterAgent,setFilterAgent]= useState("");
+  const [rateCostingRange, setRateCostingRange] = useState([0, 500]);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -39,6 +40,8 @@ export default function Home() {
       }
     });
   }, []);
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -94,6 +97,19 @@ export default function Home() {
               //     : product.clorsh === filterClorsh
               //   : true;
               filterClorsh!==null?product.clorsh===filterClorsh:true;
+              
+                const totalExpenses = product.expenses.reduce(
+                  (acc, expense) => acc + expense,
+                  0
+                );
+              var ratecost = (
+                Number(product.averagePiece) * Number(product.clothSaleRate) +
+                Number(totalExpenses) +
+                Number(product.fabrication)
+              ).toFixed(2);
+              const matchesRateCosting =
+              ratecost >= rateCostingRange[0] &&
+              ratecost<= rateCostingRange[1];
 
             return (
               matchesCategory &&
@@ -101,7 +117,8 @@ export default function Home() {
               matchesClothQuality &&
               matchesStatus &&
               matchesClorsh&&
-              matchesAgent
+              matchesAgent&&
+              matchesRateCosting
             );
           });
 
@@ -120,7 +137,8 @@ export default function Home() {
     filterClothQuality,
     filterStatus,
     filterClorsh,
-    filterAgent
+    filterAgent,
+    rateCostingRange,
   ]);
 
   
@@ -187,7 +205,7 @@ export default function Home() {
     return sum + meterValue;
   }, 0);
 
-  const handleApplyFilters = ({ category, fabricator, clothQuality, status, clorsh,clothAgent }) => {
+  const handleApplyFilters = ({ category, fabricator, clothQuality, status, clorsh,clothAgent,rateCostingRange }) => {
     const filterState = { category, fabricator, clothQuality, status, clorsh,clothAgent };
     localStorage.setItem('filters', JSON.stringify(filterState)); 
     setFilterCategory(category);
@@ -195,7 +213,9 @@ export default function Home() {
     setFilterClothQuality(clothQuality);
     setFilterStatus(status);
     setFilterClorsh(clorsh);
-    setFilterAgent(clothAgent)
+    setFilterAgent(clothAgent);
+    setRateCostingRange(rateCostingRange);
+    
   };
   useEffect(() => {
     const savedFilters = localStorage.getItem('filters');
@@ -207,6 +227,7 @@ export default function Home() {
       setFilterStatus(status !== undefined ? status : null);
       setFilterClorsh(clorsh !== undefined ? clorsh : false);
       setFilterAgent(clothAgent||'');
+      setRateCostingRange(rateCostingRange||[0,500]);
     }
   }, []);
   

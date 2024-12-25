@@ -1,25 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import ReactSlider from "react-slider";
 
 const FilterModal = ({ isOpen, onClose, onApply }) => {
-  const [category, setCategory] = useState('');
-  const [fabricator, setFabricator] = useState('');
-  const [clothQuality, setClothQuality] = useState('');
-  const [clothAgent, setClothAgent] = useState('');
+  const [category, setCategory] = useState("");
+  const [fabricator, setFabricator] = useState("");
+  const [clothQuality, setClothQuality] = useState("");
+  const [clothAgent, setClothAgent] = useState("");
   const [status, setStatus] = useState(null); // Initially no status filter
   const [clorsh, setClorsh] = useState(null);
+  const [rateCostingRange, setRateCostingRange] = useState([0, 500]);
 
   const handleApply = () => {
-    onApply({ category, fabricator, clothQuality, status, clorsh, clothAgent });
+    onApply({
+      category,
+      fabricator,
+      clothQuality,
+      status,
+      clorsh,
+      clothAgent,
+      rateCostingRange,
+    });
     onClose();
   };
 
   const handleCancel = () => {
-    setCategory('');
-    setFabricator('');
-    setClothQuality('');
+    setCategory("");
+    setFabricator("");
+    setClothQuality("");
     setStatus(null); // Reset the status filter
     setClorsh(null);
-    setClothAgent('');
+    setClothAgent("");
+    setRateCostingRange([0, 500]);
   };
 
   return (
@@ -40,7 +51,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
             {category && (
               <button
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
-                onClick={() => setCategory('')}
+                onClick={() => setCategory("")}
               >
                 &times;
               </button>
@@ -59,7 +70,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
             {fabricator && (
               <button
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
-                onClick={() => setFabricator('')}
+                onClick={() => setFabricator("")}
               >
                 &times;
               </button>
@@ -68,7 +79,9 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
 
           {/* Cloth Quality Field */}
           <div className="mb-4 relative">
-            <label className="block text-sm font-medium mb-1">Cloth Quality</label>
+            <label className="block text-sm font-medium mb-1">
+              Cloth Quality
+            </label>
             <input
               type="text"
               value={clothQuality}
@@ -78,7 +91,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
             {clothQuality && (
               <button
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
-                onClick={() => setClothQuality('')}
+                onClick={() => setClothQuality("")}
               >
                 &times;
               </button>
@@ -87,7 +100,9 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
 
           {/* Cloth Agent Field */}
           <div className="mb-4 relative">
-            <label className="block text-sm font-medium mb-1">Cloth Agent</label>
+            <label className="block text-sm font-medium mb-1">
+              Cloth Agent
+            </label>
             <input
               type="text"
               value={clothAgent}
@@ -97,11 +112,57 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
             {clothAgent && (
               <button
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
-                onClick={() => setClothAgent('')}
+                onClick={() => setClothAgent("")}
               >
                 &times;
               </button>
             )}
+          </div>
+
+          {/* rate costing slider */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-2">
+              Filter by Rate Costing
+            </label>
+
+            <ReactSlider
+              className="horizontal-slider"
+              thumbClassName="example-thumb"
+              trackClassName="example-track"
+              defaultValue={[0, 500]}
+              min={0}
+              max={500}
+              value={rateCostingRange}
+              onChange={setRateCostingRange}
+              ariaLabel={["Minimum rate", "Maximum rate"]}
+              ariaValuetext={(state) => `Rate: ${state}`}
+              withTracks
+              renderThumb={(props, state) => (
+                <div
+                  {...props}
+                  className="bg-blue-500 h-6 w-6 rounded-full flex items-center justify-center"
+                >
+                  {state.valueNow}
+                </div>
+              )}
+              renderTrack={(props, state) => (
+                <div
+                  {...props}
+                  className={`example-track ${
+                    state.index === 0 ? "left-track" : "right-track"
+                  }`}
+                  style={{
+                    left: state.index === 0 ? 0 : `${state.offset}px`,
+                    right: state.index === 1 ? 0 : `${500 - state.offset}px`,
+                  }}
+                />
+              )}
+            />
+
+            <div className="flex justify-between text-sm mt-2">
+              <span>Max-value</span>
+              <span>Min-value</span>
+            </div>
           </div>
 
           {/* Status Field */}
