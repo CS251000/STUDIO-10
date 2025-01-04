@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import ReactSlider from "react-slider";
 
 const FilterModal = ({ isOpen, onClose, onApply }) => {
   const [category, setCategory] = useState("");
@@ -8,7 +7,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
   const [clothAgent, setClothAgent] = useState("");
   const [status, setStatus] = useState(null); // Initially no status filter
   const [clorsh, setClorsh] = useState(null);
-  const [rateCostingRange, setRateCostingRange] = useState([0, 500]);
+  const [rateCostingRange, setRateCostingRange] = useState({ min: 0, max: 500 });
 
   const handleApply = () => {
     onApply({
@@ -30,7 +29,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
     setStatus(null); // Reset the status filter
     setClorsh(null);
     setClothAgent("");
-    setRateCostingRange([0, 500]);
+    setRateCostingRange({ min: 0, max: 500 });
   };
 
   return (
@@ -79,9 +78,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
 
           {/* Cloth Quality Field */}
           <div className="mb-4 relative">
-            <label className="block text-sm font-medium mb-1">
-              Cloth Quality
-            </label>
+            <label className="block text-sm font-medium mb-1">Cloth Quality</label>
             <input
               type="text"
               value={clothQuality}
@@ -100,9 +97,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
 
           {/* Cloth Agent Field */}
           <div className="mb-4 relative">
-            <label className="block text-sm font-medium mb-1">
-              Cloth Agent
-            </label>
+            <label className="block text-sm font-medium mb-1">Cloth Agent</label>
             <input
               type="text"
               value={clothAgent}
@@ -119,49 +114,36 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
             )}
           </div>
 
-          {/* rate costing slider */}
+          {/* Rate Costing Range */}
           <div className="mb-4">
             <label className="block text-sm font-medium mb-2">
               Filter by Rate Costing
             </label>
-
-            <ReactSlider
-              className="horizontal-slider"
-              thumbClassName="example-thumb"
-              trackClassName="example-track"
-              defaultValue={[0, 500]}
-              min={0}
-              max={500}
-              value={rateCostingRange}
-              onChange={setRateCostingRange}
-              ariaLabel={["Minimum rate", "Maximum rate"]}
-              ariaValuetext={(state) => `Rate: ${state}`}
-              withTracks
-              renderThumb={(props, state) => (
-                <div
-                  {...props}
-                  className="bg-blue-500 h-6 w-6 rounded-full flex items-center justify-center"
-                >
-                  {state.valueNow}
-                </div>
-              )}
-              renderTrack={(props, state) => (
-                <div
-                  {...props}
-                  className={`example-track ${
-                    state.index === 0 ? "left-track" : "right-track"
-                  }`}
-                  style={{
-                    left: state.index === 0 ? 0 : `${state.offset}px`,
-                    right: state.index === 1 ? 0 : `${500 - state.offset}px`,
-                  }}
-                />
-              )}
-            />
-
-            <div className="flex justify-between text-sm mt-2">
-              <span>Max-value</span>
-              <span>Min-value</span>
+            <div className="flex space-x-2">
+              <input
+                type="number"
+                value={rateCostingRange.min}
+                onChange={(e) =>
+                  setRateCostingRange((prev) => ({
+                    ...prev,
+                    min:parseFloat(e.target.value),
+                  }))
+                }
+                placeholder="Min"
+                className="w-1/2 p-2 border rounded"
+              />
+              <input
+                type="number"
+                value={rateCostingRange.max}
+                onChange={(e) =>
+                  setRateCostingRange((prev) => ({
+                    ...prev,
+                    max:parseFloat(e.target.value),
+                  }))
+                }
+                placeholder="Max"
+                className="w-1/2 p-2 border rounded"
+              />
             </div>
           </div>
 
@@ -206,7 +188,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
           </div>
 
           {/* Clorsh Field */}
-          <div className="mb-4 p-3 border-t-2 border-black">
+          <div className="mb-4">
             <label className="block text-sm font-medium mb-1">Clorsh</label>
             <div className="flex items-center space-x-2">
               <label>

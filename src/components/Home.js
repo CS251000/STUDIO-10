@@ -29,7 +29,7 @@ export default function Home() {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [filterClorsh, setFilterClorsh] = useState(false);
   const[filterAgent,setFilterAgent]= useState("");
-  const [rateCostingRange, setRateCostingRange] = useState([0, 500]);
+  const [rateCostingRange, setRateCostingRange] = useState({min:0, max:500});
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -108,8 +108,8 @@ export default function Home() {
                 Number(product.fabrication)
               ).toFixed(2);
               const matchesRateCosting =
-              ratecost >= rateCostingRange[0] &&
-              ratecost<= rateCostingRange[1];
+              ratecost >= rateCostingRange.min &&
+              ratecost<= rateCostingRange.max;
 
             return (
               matchesCategory &&
