@@ -13,7 +13,7 @@ export default function Card({ id, imag, jobslip, itemName, status, category = [
   const [actionType, setActionType] = useState(''); // "update" or "delete"
   const [error, setError] = useState('');
 
-  const PASSWORD="727630";
+  const PASSWORD="AZX";
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
