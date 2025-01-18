@@ -162,6 +162,12 @@ if (timestamp && typeof timestamp.toDate === 'function') {
               <span className="font-bold">Category:</span> {product.category.join(', ')}
             </div>
             <div className="w-full sm:w-1/2 mb-4">
+              <span className="font-bold">Item Purchase Rate:</span> {product.itempurchase}
+            </div>
+            <div className="w-full sm:w-1/2 mb-4">
+              <span className="font-bold">Item Sale Rate:</span> {product.itemsale}
+            </div>
+            <div className="w-full sm:w-1/2 mb-4">
               <span className="font-bold">Sizes:</span> {product.sizes.join(', ')}
             </div>
             <div className="w-full sm:w-1/2 mb-4">

@@ -190,7 +190,7 @@ export default function Home() {
   };
 
   const filteredData = data.filter((item) => {
-    console.log("Filtering item:", item); // Log each item before filtering
+    // console.log("Filtering item:", item); // Log each item before filtering
     return (
       item.itemName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       String(item.category).toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -254,7 +254,7 @@ export default function Home() {
           <Card
             key={card.id}
             id={card.id}
-            imag={card.imageUrl}
+            // imag={card.imageUrl}
             jobslip={card.jobslip}
             itemName={card.itemName}
             status={card.status}
@@ -272,6 +272,8 @@ export default function Home() {
             timestamp={card.createdAt}
             desc={card.desc}
             clorsh={card.clorsh}
+            itemPurchase= {card.itempurchase}
+            itemSale={card.itemsale}
           />
         ))}
       </div>

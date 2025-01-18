@@ -23,6 +23,8 @@ export default function AddItem() {
 
   const [product, setProduct] = useState({
     itemName: "",
+    itempurchase:"",
+    itemsale:"",
     jobslip: "",
     fabricator: "",
     category: [],
@@ -87,6 +89,12 @@ export default function AddItem() {
   }, []);
 
   const [suggestions, setSuggestions] = useState({});
+
+  const handleItemChange= (e)=>{
+    const { name, value } = e.target;
+    setProduct((prev) => ({ ...prev, [name]: value }));
+
+  }
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
@@ -304,7 +312,7 @@ const handleDateChange = (event) => {
           Add a new product
         </h2>
         <form onSubmit={handleSubmit}>
-          <div className="mb-5">
+          {/* <div className="mb-5">
             <label
               htmlFor="formFile"
               className="block mb-2 text-sm font-medium text-gray-900"
@@ -335,7 +343,7 @@ const handleDateChange = (event) => {
                 </button>
               </div>
             )}
-          </div>
+          </div> */}
 
           <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
             <div className="sm:col-span-2">
@@ -370,6 +378,40 @@ const handleDateChange = (event) => {
                   </ul>
                 )}
               
+            </div>
+            <div className="w-full">
+              <label
+                htmlFor="itempurchase"
+                className="block mb-2 text-sm font-medium text-gray-900"
+              >
+                Item Purchase
+              </label>
+              <input
+                type="number"
+                name="itempurchase"
+                id="itempurchase"
+                value={product.itempurchase}
+                onChange={handleItemChange}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                placeholder="0.0"
+              />
+            </div>
+            <div className="w-full">
+              <label
+                htmlFor="itemsale"
+                className="block mb-2 text-sm font-medium text-gray-900"
+              >
+                Item Sale
+              </label>
+              <input
+                type="number"
+                name="itemsale"
+                id="itemsale"
+                value={product.itemsale}
+                onChange={handleItemChange}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                placeholder="0.0"
+              />
             </div>
             <div className="w-full">
               <label

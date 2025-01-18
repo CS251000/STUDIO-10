@@ -4,7 +4,8 @@ import { collection, doc, setDoc, deleteDoc, query, where, getDocs } from 'fireb
 import { db, auth } from '../firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 
-export default function Card({ id, imag, jobslip, itemName, status, category = [], fabricator, clothname, quality, meter, onDelete, expenses = [], averagePiece, clothSaleRate, fabrication, timestamp,desc,clorsh }) {
+export default function Card({ id, imag, jobslip, itemName, status, category = [], fabricator, clothname, quality, meter, onDelete, expenses = [], averagePiece, clothSaleRate, fabrication, timestamp,desc,clorsh,itemPurchase,itemSale,clothPurchaseRate }) {
+
   const [isReordered, setIsReordered] = useState(false);
   const [userId, setUserId] = useState(null);
 
@@ -14,6 +15,7 @@ export default function Card({ id, imag, jobslip, itemName, status, category = [
   const [error, setError] = useState('');
 
   const PASSWORD="AZX";
+  const p2="azx"
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -70,7 +72,7 @@ export default function Card({ id, imag, jobslip, itemName, status, category = [
   };
 
   const handlePasswordSubmit = () => {
-    if (password === PASSWORD) {
+    if (password === PASSWORD|| password=== p2) {
       if (actionType === 'delete') {
         onDelete(id); // Call the delete handler
       } else if (actionType === 'update') {
@@ -115,14 +117,14 @@ if (timestamp && typeof timestamp.toDate === 'function') {
   return (
     <div className={`max-w-sm border rounded-lg shadow border-gray-700 ${status ? 'bg-yellow-100' : (!clorsh?'bg-green-300':'bg-white')}`}>
       
-      {imag ? (
+      {/* {imag ? (
   <img
     className="rounded-t-lg w-full h-48 object-cover"
     src={imag}
     alt="itemImage"
     onError={(e) => e.target.style.display = 'none'}
   />
-) : null}
+) : null} */}
       
       <div className="p-5">
         
@@ -141,6 +143,11 @@ if (timestamp && typeof timestamp.toDate === 'function') {
             {isReordered ? 'Reordered' : 'ReOrder'}
           </button>
         <h6 className="mb-2 text-2xl font-bold tracking-tight text-black text-center">{itemName}</h6>
+        <p className="mb-3 font-normal text-gray-700">Item Purchase: {itemPurchase}</p>
+        <p className="mb-3 font-normal text-gray-700">Item Sale: {itemSale}</p>
+        <p className="mb-3 font-normal text-gray-700">Cloth Purchase Rate: {clothPurchaseRate}</p>
+        <p className="mb-3 font-normal text-gray-700">Cloth Sale Rate: {clothSaleRate}</p>
+
         <p className="mb-3 font-normal text-gray-700">Date: {formattedDate}</p>
         <p className="mb-3 font-normal text-gray-700">Category: {category.join(' , ')}</p>
         <p className="mb-3 font-normal text-gray-700">Fabricator: {fabricator}</p>
@@ -148,7 +155,7 @@ if (timestamp && typeof timestamp.toDate === 'function') {
         {/* <p className="mb-3 font-normal text-gray-700">Cloth Quality: {quality}</p> */}
         <p className="mb-3 font-normal text-gray-700">Cloth Meter: {meter}</p>
         <p className="mb-3 font-normal text-gray-700">Rate Costing: {rateCost}</p>
-        <p className="mb-3 font-normal text-gray-700">Cloth Sale Rate: {clothSaleRate}</p>
+        
 
         <div className="flex justify-between">
           <Link to={`/${id}`}>
