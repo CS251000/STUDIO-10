@@ -8,6 +8,9 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
   const [status, setStatus] = useState(null); // Initially no status filter
   const [clorsh, setClorsh] = useState(null);
   const [rateCostingRange, setRateCostingRange] = useState({ min: 0, max: 500 });
+  const[itemSale,setItemSale]= useState("");
+  const[itemPurchase,setItemPurchase]= useState("");
+
 
   const handleApply = () => {
     onApply({
@@ -18,6 +21,8 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
       clorsh,
       clothAgent,
       rateCostingRange,
+      itemSale,
+      itemPurchase,
     });
     onClose();
   };
@@ -30,6 +35,8 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
     setClorsh(null);
     setClothAgent("");
     setRateCostingRange({ min: 0, max: 500 });
+    setItemSale("");
+    setItemPurchase("");
   };
 
   return (
@@ -112,6 +119,31 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
                 &times;
               </button>
             )}
+          </div>
+          {/* item */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-2">
+              Item Purchase & Sale rate
+            </label>
+            <div className="flex space-x-2">
+              <input
+                type="text"
+                value={itemPurchase}
+                onChange={(e) =>
+                  setItemPurchase(
+                    e.target.value)}
+                placeholder="Purchase rate"
+                className="w-1/2 p-2 border rounded"
+              />
+              <input
+                type="text"
+                value={itemSale}
+                onChange={(e) =>
+                  setItemSale(e.target.value)}
+                placeholder="Item Sale rate"
+                className="w-1/2 p-2 border rounded"
+              />
+            </div>
           </div>
 
           {/* Rate Costing Range */}

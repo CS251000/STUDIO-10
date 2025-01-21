@@ -30,6 +30,35 @@ export default function Home() {
   const [filterClorsh, setFilterClorsh] = useState(false);
   const[filterAgent,setFilterAgent]= useState("");
   const [rateCostingRange, setRateCostingRange] = useState({min:0, max:500});
+  const[itemPurchaseRate,setItemPurchaseRate]=useState("");
+  const[itemSaleRate,setItemSaleRate]= useState("");
+
+
+  useEffect(() => {
+    const savedFilters = localStorage.getItem("filters");
+    if (savedFilters) {
+      const {
+        category,
+        fabricator,
+        clothQuality,
+        status,
+        clorsh,
+        clothAgent,
+        rateCostingRange,
+        itemPurchaseRate,
+        itemSaleRate,
+      } = JSON.parse(savedFilters);
+      setFilterCategory(category || "");
+      setFilterFabricator(fabricator || "");
+      setFilterClothQuality(clothQuality || "");
+      setFilterStatus(status !== undefined ? status : null);
+      setFilterClorsh(clorsh !== undefined ? clorsh : false);
+      setFilterAgent(clothAgent || "");
+      setRateCostingRange(rateCostingRange || { min: 0, max: 500 });
+      setItemPurchaseRate(itemPurchaseRate || "");
+      setItemSaleRate(itemSaleRate || "");
+    }
+  }, []);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -88,14 +117,18 @@ export default function Home() {
             const matchesStatus =
               filterStatus !== null ? product.status === filterStatus : true;
 
+              const matchesItemPurchase=
+              itemPurchaseRate? String(product.itempurchase ||"")
+                  .toLowerCase().includes(itemPurchaseRate.toLowerCase())
+              : true;
+
+              const matchesItemSale=
+              itemSaleRate?String(product.itemsale || "")
+              .toLowerCase().includes(itemSaleRate.toLowerCase())
+          : true;
+
             const matchesClorsh =
-              // filterClorsh !== null
-              //   ? product.clorsh === null ||
-              //     product.clorsh === undefined ||
-              //     product.clorsh === false
-              //     ? filterClorsh === false
-              //     : product.clorsh === filterClorsh
-              //   : true;
+              
               filterClorsh!==null?product.clorsh===filterClorsh:true;
               
                 const totalExpenses = product.expenses.reduce(
@@ -118,7 +151,9 @@ export default function Home() {
               matchesStatus &&
               matchesClorsh&&
               matchesAgent&&
-              matchesRateCosting
+              matchesRateCosting &&
+              matchesItemPurchase&&
+              matchesItemSale
             );
           });
 
@@ -139,6 +174,8 @@ export default function Home() {
     filterClorsh,
     filterAgent,
     rateCostingRange,
+    itemPurchaseRate,
+    itemSaleRate
   ]);
 
   
@@ -205,8 +242,8 @@ export default function Home() {
     return sum + meterValue;
   }, 0);
 
-  const handleApplyFilters = ({ category, fabricator, clothQuality, status, clorsh,clothAgent,rateCostingRange }) => {
-    const filterState = { category, fabricator, clothQuality, status, clorsh,clothAgent };
+  const handleApplyFilters = ({ category, fabricator, clothQuality, status, clorsh,clothAgent,rateCostingRange,itemSale,itemPurchase }) => {
+    const filterState = { category, fabricator, clothQuality, status, clorsh,clothAgent,rateCostingRange,itemSale,itemPurchase };
     localStorage.setItem('filters', JSON.stringify(filterState)); 
     setFilterCategory(category);
     setFilterFabricator(fabricator);
@@ -215,12 +252,14 @@ export default function Home() {
     setFilterClorsh(clorsh);
     setFilterAgent(clothAgent);
     setRateCostingRange(rateCostingRange);
+    setItemPurchaseRate(itemPurchase);
+    setItemSaleRate(itemSale);
     
   };
   useEffect(() => {
     const savedFilters = localStorage.getItem('filters');
     if (savedFilters) {
-      const { category, fabricator, clothQuality, status, clorsh,clothAgent } = JSON.parse(savedFilters);
+      const { category, fabricator, clothQuality, status, clorsh,clothAgent,rateCostingRange,itemPurchase,itemSale } = JSON.parse(savedFilters);
       setFilterCategory(category || '');
       setFilterFabricator(fabricator || '');
       setFilterClothQuality(clothQuality || '');
@@ -228,9 +267,12 @@ export default function Home() {
       setFilterClorsh(clorsh !== undefined ? clorsh : false);
       setFilterAgent(clothAgent||'');
       setRateCostingRange(rateCostingRange||[0,500]);
+      setItemPurchaseRate(itemPurchase||'');
+      setItemSaleRate(itemSale||'');
     }
   }, []);
   
+  console.log("f",filteredData);
   
 
   return (
