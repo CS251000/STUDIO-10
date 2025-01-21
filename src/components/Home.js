@@ -316,6 +316,7 @@ export default function Home() {
             clorsh={card.clorsh}
             itemPurchase= {card.itempurchase}
             itemSale={card.itemsale}
+            clothAgent={card.clothagent}
           />
         ))}
       </div>

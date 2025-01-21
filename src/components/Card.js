@@ -4,7 +4,7 @@ import { collection, doc, setDoc, deleteDoc, query, where, getDocs } from 'fireb
 import { db, auth } from '../firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 
-export default function Card({ id, imag, jobslip, itemName, status, category = [], fabricator, clothname, quality, meter, onDelete, expenses = [], averagePiece, clothSaleRate, fabrication, timestamp,desc,clorsh,itemPurchase,itemSale,clothPurchaseRate }) {
+export default function Card({ id, imag, jobslip, itemName, status, category = [], fabricator, clothname, quality, meter, onDelete, expenses = [], averagePiece, clothSaleRate, fabrication, timestamp,desc,clorsh,itemPurchase,itemSale,clothPurchaseRate,clothAgent }) {
 
   const [isReordered, setIsReordered] = useState(false);
   const [userId, setUserId] = useState(null);
@@ -154,7 +154,7 @@ if (timestamp && typeof timestamp.toDate === 'function') {
         <p className="mb-3 font-normal text-gray-700">Cloth Name: {clothname}</p>
         {/* <p className="mb-3 font-normal text-gray-700">Cloth Quality: {quality}</p> */}
         <p className="mb-3 font-normal text-gray-700">Cloth Meter: {meter}</p>
-        <p className="mb-3 font-normal text-gray-700">Rate Costing: {rateCost}</p>
+        <p className="mb-3 font-normal text-gray-700">Cloth Agent: {clothAgent}</p>
         
 
         <div className="flex justify-between">
