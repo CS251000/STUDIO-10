@@ -375,7 +375,7 @@ export default function UpdateItem() {
                 Item Purchase
               </label>
               <input
-                type="number"
+                type="text"
                 name="itempurchase"
                 id="itempurchase"
                 value={product.itempurchase}
@@ -391,7 +391,7 @@ export default function UpdateItem() {
                 Item Sale
               </label>
               <input
-                type="number"
+                type="text"
                 name="itemsale"
                 id="itemsale"
                 value={product.itemsale}

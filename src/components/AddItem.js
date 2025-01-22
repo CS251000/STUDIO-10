@@ -387,7 +387,7 @@ const handleDateChange = (event) => {
                 Item Purchase
               </label>
               <input
-                type="number"
+                type="text"
                 name="itempurchase"
                 id="itempurchase"
                 value={product.itempurchase}
@@ -404,7 +404,7 @@ const handleDateChange = (event) => {
                 Item Sale
               </label>
               <input
-                type="number"
+                type="text"
                 name="itemsale"
                 id="itemsale"
                 value={product.itemsale}
