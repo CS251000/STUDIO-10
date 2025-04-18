@@ -25,6 +25,7 @@ export default function Home() {
   const [filterCategory, setFilterCategory] = useState("");
   const [filterFabricator, setFilterFabricator] = useState("");
   const [filterClothQuality, setFilterClothQuality] = useState("");
+  const [filterClothName, setFilterClothName] = useState("");
   const [filterStatus, setFilterStatus] = useState(null);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [filterClorsh, setFilterClorsh] = useState(false);
@@ -47,6 +48,7 @@ export default function Home() {
         rateCostingRange,
         itemPurchaseRate,
         itemSaleRate,
+        clothName,
       } = JSON.parse(savedFilters);
       setFilterCategory(category || "");
       setFilterFabricator(fabricator || "");
@@ -57,6 +59,7 @@ export default function Home() {
       setRateCostingRange(rateCostingRange || { min: 0, max: 500 });
       setItemPurchaseRate(itemPurchaseRate || "");
       setItemSaleRate(itemSaleRate || "");
+      setFilterClothName(clothName||"");
     }
   }, []);
 
@@ -107,6 +110,11 @@ export default function Home() {
                   .toLowerCase()
                   .includes(filterClothQuality.toLowerCase())
               : true;
+              const matchesClothName = filterClothName
+              ? (product.clothName || "")
+                  .toLowerCase()
+                  .includes(filterClothName.toLowerCase())
+              : true;
               const matchesAgent = filterAgent
               ? (product.clothagent || "")
                   .toLowerCase()
@@ -135,11 +143,12 @@ export default function Home() {
                   (acc, expense) => acc + expense,
                   0
                 );
-              var ratecost = (
-                Number(product.averagePiece) * Number(product.clothSaleRate) +
-                Number(totalExpenses) +
-                Number(product.fabrication)
-              ).toFixed(2);
+              // var ratecost = (
+              //   Number(product.averagePiece) * Number(product.clothSaleRate) +
+              //   Number(totalExpenses) +
+              //   Number(product.fabrication)
+              // ).toFixed(2);
+              const ratecost= Number(product.itempurchase);
               const matchesRateCosting =
               ratecost >= rateCostingRange.min &&
               ratecost<= rateCostingRange.max;
@@ -153,7 +162,8 @@ export default function Home() {
               matchesAgent&&
               matchesRateCosting &&
               matchesItemPurchase&&
-              matchesItemSale
+              matchesItemSale&& 
+              matchesClothName
             );
           });
 
@@ -175,7 +185,8 @@ export default function Home() {
     filterAgent,
     rateCostingRange,
     itemPurchaseRate,
-    itemSaleRate
+    itemSaleRate,
+    filterClothName
   ]);
 
   
@@ -242,8 +253,8 @@ export default function Home() {
     return sum + meterValue;
   }, 0);
 
-  const handleApplyFilters = ({ category, fabricator, clothQuality, status, clorsh,clothAgent,rateCostingRange,itemSale,itemPurchase }) => {
-    const filterState = { category, fabricator, clothQuality, status, clorsh,clothAgent,rateCostingRange,itemSale,itemPurchase };
+  const handleApplyFilters = ({ category, fabricator, clothQuality, status, clorsh,clothAgent,rateCostingRange,itemSale,itemPurchase,clothName }) => {
+    const filterState = { category, fabricator, clothQuality, status, clorsh,clothAgent,rateCostingRange,itemSale,itemPurchase,clothName };
     localStorage.setItem('filters', JSON.stringify(filterState)); 
     setFilterCategory(category);
     setFilterFabricator(fabricator);
@@ -254,12 +265,13 @@ export default function Home() {
     setRateCostingRange(rateCostingRange);
     setItemPurchaseRate(itemPurchase);
     setItemSaleRate(itemSale);
+    setFilterClothName(clothName);
     
   };
   useEffect(() => {
     const savedFilters = localStorage.getItem('filters');
     if (savedFilters) {
-      const { category, fabricator, clothQuality, status, clorsh,clothAgent,rateCostingRange,itemPurchase,itemSale } = JSON.parse(savedFilters);
+      const { category, fabricator, clothQuality, status, clorsh,clothAgent,rateCostingRange,itemPurchase,itemSale,clothName } = JSON.parse(savedFilters);
       setFilterCategory(category || '');
       setFilterFabricator(fabricator || '');
       setFilterClothQuality(clothQuality || '');
@@ -269,10 +281,11 @@ export default function Home() {
       setRateCostingRange(rateCostingRange||[0,500]);
       setItemPurchaseRate(itemPurchase||'');
       setItemSaleRate(itemSale||'');
+      setFilterClothName(clothName||'');
     }
   }, []);
   
-  console.log("f",filteredData);
+
   
 
   return (

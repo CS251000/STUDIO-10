@@ -5,6 +5,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
   const [fabricator, setFabricator] = useState("");
   const [clothQuality, setClothQuality] = useState("");
   const [clothAgent, setClothAgent] = useState("");
+  const [clothName, setClothName] = useState("");
   const [status, setStatus] = useState(null); // Initially no status filter
   const [clorsh, setClorsh] = useState(null);
   const [rateCostingRange, setRateCostingRange] = useState({ min: 0, max: 500 });
@@ -23,6 +24,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
       rateCostingRange,
       itemSale,
       itemPurchase,
+      clothName
     });
     onClose();
   };
@@ -34,6 +36,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
     setStatus(null); // Reset the status filter
     setClorsh(null);
     setClothAgent("");
+    setClothName("");
     setRateCostingRange({ min: 0, max: 500 });
     setItemSale("");
     setItemPurchase("");
@@ -42,7 +45,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
   return (
     isOpen && (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white p-8 rounded shadow-lg max-w-sm w-full">
+        <div className="bg-white p-8 rounded shadow-lg max-w-sm w-full h-screen overflow-y-scroll ">
           <h2 className="text-xl font-semibold mb-4">Filter Options</h2>
 
           {/* Category Field */}
@@ -120,6 +123,24 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
               </button>
             )}
           </div>
+          {/* cloth  name */}
+          <div className="mb-4 relative">
+            <label className="block text-sm font-medium mb-1">Cloth Name</label>
+            <input
+              type="text"
+              value={clothName}
+              onChange={(e) => setClothName(e.target.value)}
+              className="w-full p-2 border rounded pr-10"
+            />
+            {clothName && (
+              <button
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
+                onClick={() => setClothName("")}
+              >
+                &times;
+              </button>
+            )}
+          </div>
           {/* item */}
           <div className="mb-4">
             <label className="block text-sm font-medium mb-2">
@@ -149,7 +170,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
           {/* Rate Costing Range */}
           <div className="mb-4">
             <label className="block text-sm font-medium mb-2">
-              Filter by Rate Costing
+              Filter by Item Purchase
             </label>
             <div className="flex space-x-2">
               <input
