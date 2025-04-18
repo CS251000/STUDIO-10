@@ -1,9 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import Card from './Card';
-import { db, auth } from '../firebaseConfig';
-import { collection, getDocs, doc, getDoc, deleteDoc,where,query } from 'firebase/firestore';
-import { useOutletContext } from 'react-router-dom';
-import { onAuthStateChanged } from 'firebase/auth';
+import React, { useEffect, useState } from "react";
+import Card from "./Card";
+import { db, auth } from "../firebaseConfig";
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  deleteDoc,
+  where,
+  query,
+} from "firebase/firestore";
+import { useOutletContext } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
 
 const ReorderedItems = () => {
   const { searchQuery } = useOutletContext();
@@ -25,30 +33,33 @@ const ReorderedItems = () => {
     const fetchReorderedItems = async () => {
       if (userId) {
         try {
-          const reorderedItemsRef =query(collection
-            (db, 'reorderedItems'),
-          where('userId', '==', userId),
-          // orderBy('reorderedAt', 'desc')
-        );
+          const reorderedItemsRef = query(
+            collection(db, "reorderedItems"),
+            where("userId", "==", userId)
+            // orderBy('reorderedAt', 'desc')
+          );
           const querySnapshot = await getDocs(reorderedItemsRef);
-          const items = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          const items = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
           setReorderedItems(items);
 
           // Fetch corresponding products
-          const productPromises = items.map(item => {
-            const productRef = doc(db, 'products', item.itemId);
+          const productPromises = items.map((item) => {
+            const productRef = doc(db, "products", item.itemId);
             return getDoc(productRef);
           });
 
           const productSnapshots = await Promise.all(productPromises);
-          const fetchedProducts = productSnapshots.map(snapshot => ({
+          const fetchedProducts = productSnapshots.map((snapshot) => ({
             id: snapshot.id,
-            ...snapshot.data()
+            ...snapshot.data(),
           }));
 
           setProducts(fetchedProducts);
         } catch (error) {
-          console.error('Error fetching reordered items and products:', error);
+          console.error("Error fetching reordered items and products:", error);
         }
       }
     };
@@ -57,34 +68,41 @@ const ReorderedItems = () => {
   }, [userId]);
 
   const handleDelete = async (productId) => {
-    const confirmed = window.confirm("Are you sure you want to delete this item?");
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this item?"
+    );
     if (confirmed) {
       try {
         // Delete from products collection
-        await deleteDoc(doc(db, 'products', productId));
+        await deleteDoc(doc(db, "products", productId));
 
         // Delete from reorderedItems collection
-        const reorderedItem = reorderedItems.find(item => item.itemId === productId);
+        const reorderedItem = reorderedItems.find(
+          (item) => item.itemId === productId
+        );
         if (reorderedItem) {
-          await deleteDoc(doc(db, 'reorderedItems', reorderedItem.id));
+          await deleteDoc(doc(db, "reorderedItems", reorderedItem.id));
         }
 
         // Update state to reflect the deletion
-        setProducts(products.filter(product => product.id !== productId));
-        setReorderedItems(reorderedItems.filter(item => item.itemId !== productId));
+        setProducts(products.filter((product) => product.id !== productId));
+        setReorderedItems(
+          reorderedItems.filter((item) => item.itemId !== productId)
+        );
       } catch (error) {
-        console.error('Error deleting item:', error);
+        console.error("Error deleting item:", error);
       }
     }
   };
 
-  const filteredData = products.filter(item =>
-    item.itemName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    String(item.category).toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.fabricator.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.jobslip.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.clothName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.clothQuality.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredData = products.filter(
+    (item) =>
+      item.itemName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(item.category).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.fabricator.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.jobslip.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.clothName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.clothQuality.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -100,7 +118,7 @@ const ReorderedItems = () => {
                 <Card
                   key={card.id}
                   id={card.id}
-                  imag={card.imageUrl}
+                  // imag={card.imageUrl}
                   jobslip={card.jobslip}
                   itemName={card.itemName}
                   status={card.status}
@@ -110,13 +128,17 @@ const ReorderedItems = () => {
                   quality={card.clothQuality}
                   meter={card.meter}
                   clothPurchaseRate={card.clothPurchaseRate}
-                  onDelete={() => handleDelete(card.id)}
+                  onDelete={handleDelete}
                   expenses={card.expenses}
                   averagePiece={card.averagePiece}
                   clothSaleRate={card.clothSaleRate}
                   fabrication={card.fabrication}
                   timestamp={card.createdAt}
-                  desc= {card.desc}
+                  desc={card.desc}
+                  clorsh={card.clorsh}
+                  itemPurchase={card.itempurchase}
+                  itemSale={card.itemsale}
+                  clothAgent={card.clothagent}
                 />
               ))
             )}

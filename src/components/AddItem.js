@@ -308,7 +308,7 @@ const handleDateChange = (event) => {
   return (
     <section className="bg-white">
       <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
-        <h2 className="mb-4 text-xl font-bold text-gray-900">
+        <h2 className="mb-4 text-xl lg:text-2xl font-bold text-gray-900">
           Add a new product
         </h2>
         <form onSubmit={handleSubmit}>
@@ -349,7 +349,7 @@ const handleDateChange = (event) => {
             <div className="sm:col-span-2">
               <label
                 htmlFor="name"
-                className="block mb-2 text-sm font-medium text-gray-900"
+                className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
               >
                 Item Name
               </label>
@@ -382,7 +382,7 @@ const handleDateChange = (event) => {
             <div className="w-full">
               <label
                 htmlFor="itempurchase"
-                className="block mb-2 text-sm font-medium text-gray-900"
+                className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
               >
                 Item Purchase
               </label>
@@ -399,7 +399,7 @@ const handleDateChange = (event) => {
             <div className="w-full">
               <label
                 htmlFor="itemsale"
-                className="block mb-2 text-sm font-medium text-gray-900"
+                className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
               >
                 Item Sale
               </label>
@@ -416,7 +416,7 @@ const handleDateChange = (event) => {
             <div className="w-full">
               <label
                 htmlFor="jobslip"
-                className="block mb-2 text-sm font-medium text-gray-900"
+                className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
               >
                 Job Slip
               </label>
@@ -433,7 +433,7 @@ const handleDateChange = (event) => {
             <div className="w-full">
               <label
                 htmlFor="createdAt"
-                className="block mb-2 text-sm font-medium text-gray-900"
+                className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
               >
                 Enter Date
               </label>
@@ -450,7 +450,7 @@ const handleDateChange = (event) => {
             <div className="w-full">
               <label
                 htmlFor="fabricator"
-                className="block mb-2 text-sm font-medium text-gray-900"
+                className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
               >
                 Fabricator
               </label>
@@ -513,7 +513,7 @@ const handleDateChange = (event) => {
             <div className="w-full">
               <label
                 htmlFor="category"
-                className="block mb-2 text-sm font-medium text-gray-900"
+                className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
               >
                 Category:{" "}
               </label>
@@ -532,7 +532,7 @@ const handleDateChange = (event) => {
             <div className="w-full">
               <label
                 htmlFor="sizes"
-                className="block mb-2 text-sm font-medium text-gray-900"
+                className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
               >
                 Sizes
               </label>
@@ -551,7 +551,7 @@ const handleDateChange = (event) => {
             <div className="w-full">
               <label
                 htmlFor="meter"
-                className="block mb-2 text-sm font-medium text-gray-900"
+                className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
               >
                 Cloth Meter
               </label>
@@ -568,7 +568,7 @@ const handleDateChange = (event) => {
             <div className="w-full">
               <label
                 htmlFor="clothagent"
-                className="block mb-2 text-sm font-medium text-gray-900"
+                className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
               >
                 Cloth Agent
               </label>
@@ -604,7 +604,7 @@ const handleDateChange = (event) => {
             <div className="w-full relative">
               <label
                 htmlFor="clothQuality"
-                className="block mb-2 text-sm font-medium text-gray-900"
+                className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
               >
                 Cloth Quality
               </label>
@@ -637,7 +637,7 @@ const handleDateChange = (event) => {
             <div className="w-full">
               <label
                 htmlFor="clothName"
-                className="block mb-2 text-sm font-medium text-gray-900"
+                className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
               >
                 Cloth Name
               </label>
@@ -681,7 +681,7 @@ const handleDateChange = (event) => {
             <div className="w-full">
               <label
                 htmlFor="clothPurchaseRate"
-                className="block mb-2 text-sm font-medium text-gray-900"
+                className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
               >
                 Cloth Purchase Rate
               </label>
@@ -698,7 +698,7 @@ const handleDateChange = (event) => {
             <div className="w-full">
               <label
                 htmlFor="clothSaleRate"
-                className="block mb-2 text-sm font-medium text-gray-900"
+                className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
               >
                 Cloth Sale Rate
               </label>
@@ -715,7 +715,7 @@ const handleDateChange = (event) => {
             <div className="w-full">
               <label
                 htmlFor="averagePiece"
-                className="block mb-2 text-sm font-medium text-gray-900"
+                className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
               >
                 Average Piece
               </label>
@@ -751,7 +751,7 @@ const handleDateChange = (event) => {
               </button>
               <button
                 type="button"
-                className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-blue-500"
+                className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm lg:text-lg font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-blue-500"
                 onClick={() => setIsSwprModalOpen(true)}
               >
                 Add SWPR
@@ -760,7 +760,7 @@ const handleDateChange = (event) => {
             <div className="w-full">
               <label
                 htmlFor="fabrication"
-                className="block mb-2 text-sm font-medium text-gray-900"
+                className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
               >
                 Fabrication
               </label>
@@ -798,7 +798,7 @@ const handleDateChange = (event) => {
             <div className="w-full">
               <label
                 htmlFor="discount"
-                className="block mb-2 text-sm font-medium text-gray-900"
+                className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
               >
                 Discount (%)
               </label>
@@ -815,7 +815,7 @@ const handleDateChange = (event) => {
             <div className="w-full">
               <label
                 htmlFor="packingCharge"
-                className="block mb-2 text-sm font-medium text-gray-900"
+                className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
               >
                 Packing Charge (in rs.)
               </label>
@@ -873,7 +873,7 @@ const handleDateChange = (event) => {
           </div>
           <button
             type="button"
-            className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-green-700 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-green-500 mb-2"
+            className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm lg:text-lg font-medium text-center text-white bg-green-700 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-green-500 mb-2"
             onClick={() => setIsSwsrModalOpen(true)}
           >
             Add SWSR
@@ -881,7 +881,7 @@ const handleDateChange = (event) => {
           <div className="w-full">
             <label
               htmlFor="mrp"
-              className="block mb-2 text-sm font-medium text-gray-900"
+              className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
             >
               MRP
             </label>
@@ -898,7 +898,7 @@ const handleDateChange = (event) => {
           <div className="w-full mt-5">
             <label
               htmlFor="desc"
-              className="block mb-2 text-sm font-medium text-gray-900"
+              className="block mb-2 text-sm lg:text-lg font-medium text-gray-900"
             >
               Description
             </label>
