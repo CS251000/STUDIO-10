@@ -143,12 +143,12 @@ export default function Home() {
                   (acc, expense) => acc + expense,
                   0
                 );
-              // var ratecost = (
-              //   Number(product.averagePiece) * Number(product.clothSaleRate) +
-              //   Number(totalExpenses) +
-              //   Number(product.fabrication)
-              // ).toFixed(2);
-              const ratecost= Number(product.itempurchase);
+              var ratecost = (
+                Number(product.averagePiece) * Number(product.clothSaleRate) +
+                Number(totalExpenses) +
+                Number(product.fabrication)
+              ).toFixed(2);
+              // const ratecost= Number(product.itempurchase);
               const matchesRateCosting =
               ratecost >= rateCostingRange.min &&
               ratecost<= rateCostingRange.max;
