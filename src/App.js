@@ -11,6 +11,7 @@ import Signup from "./components/Signup";
 import ProtectedRoute from './components/ProtectedRouter';
 import { AuthProvider } from "./hooks/useAuth";
 import Footer from './components/Footer';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Layout = () => {
   const [searchQuery, setSearchQuery] = useState('');

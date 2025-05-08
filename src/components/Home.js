@@ -2,19 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import Card from "./Card";
 import { db, auth, storage } from "../firebaseConfig";
+
 import {
   collection,
   getDocs,
   deleteDoc,
   query,
-  orderBy,
   where,
   doc,
   getDoc,
+  orderBy,
 } from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
 import { onAuthStateChanged } from "firebase/auth";
 import FilterModal from "./FilterModal";
+import { DATE_FILTER_OPTIONS,getDateRange } from "../lib/constants";
 
 export default function Home() {
   const { searchQuery } = useOutletContext();
@@ -29,11 +31,14 @@ export default function Home() {
   const [filterStatus, setFilterStatus] = useState(null);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [filterClorsh, setFilterClorsh] = useState(false);
-  const[filterAgent,setFilterAgent]= useState("");
-  const [rateCostingRange, setRateCostingRange] = useState({min:0, max:500});
-  const[itemPurchaseRate,setItemPurchaseRate]=useState("");
-  const[itemSaleRate,setItemSaleRate]= useState("");
-
+  const [filterAgent, setFilterAgent] = useState("");
+  const [rateCostingRange, setRateCostingRange] = useState({
+    min: 0,
+    max: 500,
+  });
+  const [itemPurchaseRate, setItemPurchaseRate] = useState("");
+  const [itemSaleRate, setItemSaleRate] = useState("");
+  const [dateFilter, setDateFilter] = useState("lastWeek");
 
   useEffect(() => {
     const savedFilters = localStorage.getItem("filters");
@@ -59,7 +64,7 @@ export default function Home() {
       setRateCostingRange(rateCostingRange || { min: 0, max: 500 });
       setItemPurchaseRate(itemPurchaseRate || "");
       setItemSaleRate(itemSaleRate || "");
-      setFilterClothName(clothName||"");
+      setFilterClothName(clothName || "");
     }
   }, []);
 
@@ -73,18 +78,29 @@ export default function Home() {
     });
   }, []);
 
-
-
   useEffect(() => {
     const fetchData = async () => {
       if (userId) {
         try {
-          // Fetch all products for the user
+          const now = new Date();
+          const {startDate,endDate}= getDateRange(dateFilter);
+          function formatDate(date) {
+            return date.toISOString().split("T")[0]; // gives "YYYY-MM-DD"
+          }
+          let start = formatDate(startDate);
+          let end = formatDate(endDate);
+          
+          // console.log("Start:",start, "End:",end);
+
+
           let q = query(
             collection(db, "products"),
             where("user", "==", userId),
-            orderBy("createdAt", "desc")
+            where("createdAt", ">=", start),
+            where("createdAt", "<",end),
+            orderBy("createdAt","desc")
           );
+          
 
           const querySnapshot = await getDocs(q);
           const products = querySnapshot.docs.map((doc) => ({
@@ -110,59 +126,59 @@ export default function Home() {
                   .toLowerCase()
                   .includes(filterClothQuality.toLowerCase())
               : true;
-              const matchesClothName = filterClothName
+            const matchesClothName = filterClothName
               ? (product.clothName || "")
                   .toLowerCase()
                   .includes(filterClothName.toLowerCase())
               : true;
-              const matchesAgent = filterAgent
+            const matchesAgent = filterAgent
               ? (product.clothagent || "")
                   .toLowerCase()
                   .includes(filterAgent.toLowerCase())
               : true;
 
-
             const matchesStatus =
               filterStatus !== null ? product.status === filterStatus : true;
 
-              const matchesItemPurchase=
-              itemPurchaseRate? String(product.itempurchase ||"")
-                  .toLowerCase().includes(itemPurchaseRate.toLowerCase())
+            const matchesItemPurchase = itemPurchaseRate
+              ? String(product.itempurchase || "")
+                  .toLowerCase()
+                  .includes(itemPurchaseRate.toLowerCase())
               : true;
 
-              const matchesItemSale=
-              itemSaleRate?String(product.itemsale || "")
-              .toLowerCase().includes(itemSaleRate.toLowerCase())
-          : true;
+            const matchesItemSale = itemSaleRate
+              ? String(product.itemsale || "")
+                  .toLowerCase()
+                  .includes(itemSaleRate.toLowerCase())
+              : true;
 
             const matchesClorsh =
-              
-              filterClorsh!==null?product.clorsh===filterClorsh:true;
-              
-                const totalExpenses = product.expenses.reduce(
-                  (acc, expense) => acc + expense,
-                  0
-                );
-              var ratecost = (
-                Number(product.averagePiece) * Number(product.clothSaleRate) +
-                Number(totalExpenses) +
-                Number(product.fabrication)
-              ).toFixed(2);
-              // const ratecost= Number(product.itempurchase);
-              const matchesRateCosting =
+              filterClorsh !== null ? product.clorsh === filterClorsh : true;
+
+            const totalExpenses = product.expenses.reduce(
+              (acc, expense) => acc + expense,
+              0
+            );
+            var ratecost = (
+              Number(product.averagePiece) * Number(product.clothSaleRate) +
+              Number(totalExpenses) +
+              Number(product.fabrication)
+            ).toFixed(2);
+            // const ratecost= Number(product.itempurchase);
+            const matchesRateCosting =
               ratecost >= rateCostingRange.min &&
-              ratecost<= rateCostingRange.max;
+              ratecost <= rateCostingRange.max;
 
             return (
               matchesCategory &&
               matchesFabricator &&
               matchesClothQuality &&
               matchesStatus &&
-              matchesClorsh&&
-              matchesAgent&&
+              matchesClorsh &&
+              matchesAgent &&
               matchesRateCosting &&
-              matchesItemPurchase&&
-              matchesItemSale&& 
+              matchesItemPurchase &&
+              matchesItemSale &&
               matchesClothName
             );
           });
@@ -186,10 +202,9 @@ export default function Home() {
     rateCostingRange,
     itemPurchaseRate,
     itemSaleRate,
-    filterClothName
+    filterClothName,
+    dateFilter,
   ]);
-
-  
 
   const handleDelete = async (id) => {
     const confirmed = window.confirm(
@@ -253,9 +268,31 @@ export default function Home() {
     return sum + meterValue;
   }, 0);
 
-  const handleApplyFilters = ({ category, fabricator, clothQuality, status, clorsh,clothAgent,rateCostingRange,itemSale,itemPurchase,clothName }) => {
-    const filterState = { category, fabricator, clothQuality, status, clorsh,clothAgent,rateCostingRange,itemSale,itemPurchase,clothName };
-    localStorage.setItem('filters', JSON.stringify(filterState)); 
+  const handleApplyFilters = ({
+    category,
+    fabricator,
+    clothQuality,
+    status,
+    clorsh,
+    clothAgent,
+    rateCostingRange,
+    itemSale,
+    itemPurchase,
+    clothName,
+  }) => {
+    const filterState = {
+      category,
+      fabricator,
+      clothQuality,
+      status,
+      clorsh,
+      clothAgent,
+      rateCostingRange,
+      itemSale,
+      itemPurchase,
+      clothName,
+    };
+    localStorage.setItem("filters", JSON.stringify(filterState));
     setFilterCategory(category);
     setFilterFabricator(fabricator);
     setFilterClothQuality(clothQuality);
@@ -266,41 +303,62 @@ export default function Home() {
     setItemPurchaseRate(itemPurchase);
     setItemSaleRate(itemSale);
     setFilterClothName(clothName);
-    
   };
   useEffect(() => {
-    const savedFilters = localStorage.getItem('filters');
+    const savedFilters = localStorage.getItem("filters");
     if (savedFilters) {
-      const { category, fabricator, clothQuality, status, clorsh,clothAgent,rateCostingRange,itemPurchase,itemSale,clothName } = JSON.parse(savedFilters);
-      setFilterCategory(category || '');
-      setFilterFabricator(fabricator || '');
-      setFilterClothQuality(clothQuality || '');
+      const {
+        category,
+        fabricator,
+        clothQuality,
+        status,
+        clorsh,
+        clothAgent,
+        rateCostingRange,
+        itemPurchase,
+        itemSale,
+        clothName,
+      } = JSON.parse(savedFilters);
+      setFilterCategory(category || "");
+      setFilterFabricator(fabricator || "");
+      setFilterClothQuality(clothQuality || "");
       setFilterStatus(status !== undefined ? status : null);
       setFilterClorsh(clorsh !== undefined ? clorsh : false);
-      setFilterAgent(clothAgent||'');
-      setRateCostingRange(rateCostingRange||[0,500]);
-      setItemPurchaseRate(itemPurchase||'');
-      setItemSaleRate(itemSale||'');
-      setFilterClothName(clothName||'');
+      setFilterAgent(clothAgent || "");
+      setRateCostingRange(rateCostingRange || [0, 500]);
+      setItemPurchaseRate(itemPurchase || "");
+      setItemSaleRate(itemSale || "");
+      setFilterClothName(clothName || "");
     }
   }, []);
-  
-
-  
 
   return (
     <div className="container mx-auto px-4 mt-4">
-      <button
-        className="flex items-center bg-slate-400 hover:bg-slate-600 border-0 py-1 px-3 focus:outline-none rounded text-base text-black"
-        onClick={() => setIsFilterModalOpen(true)}
-      >
-        Filter
-      </button>
-      <FilterModal
-        isOpen={isFilterModalOpen}
-        onClose={() => setIsFilterModalOpen(false)}
-        onApply={handleApplyFilters}
-      />
+      <div className="flex flex-row">
+        <button
+          className="flex items-center bg-slate-400 hover:bg-slate-600 border-0 py-1 px-3 focus:outline-none rounded text-base text-black"
+          onClick={() => setIsFilterModalOpen(true)}
+        >
+          Filter
+        </button>
+        <select
+          value={dateFilter}
+          onChange={(e) => {
+            setDateFilter(e.target.value)
+            console.log(filteredData);
+          }}
+          className="mx-2 bg-blue-500"
+        >
+          {DATE_FILTER_OPTIONS.map((daterange)=>(
+            <option value={daterange.value}>{daterange.label}</option>
+          ))}
+        </select>
+        <FilterModal
+          isOpen={isFilterModalOpen}
+          onClose={() => setIsFilterModalOpen(false)}
+          onApply={handleApplyFilters}
+        />
+      </div>
       <div className="my-4 text-xl font-bold text-gray-700">
         Total Meter: {totalMeter.toFixed(2)}
       </div>
@@ -327,7 +385,7 @@ export default function Home() {
             timestamp={card.createdAt}
             desc={card.desc}
             clorsh={card.clorsh}
-            itemPurchase= {card.itempurchase}
+            itemPurchase={card.itempurchase}
             itemSale={card.itemsale}
             clothAgent={card.clothagent}
           />
