@@ -16,7 +16,7 @@ import {
 import { ref, deleteObject } from "firebase/storage";
 import { onAuthStateChanged } from "firebase/auth";
 import FilterModal from "./FilterModal";
-import { DATE_FILTER_OPTIONS,getDateRange } from "../lib/constants";
+import { DATE_FILTER_OPTIONS, getDateRange } from "../lib/constants";
 
 export default function Home() {
   const { searchQuery } = useOutletContext();
@@ -38,7 +38,7 @@ export default function Home() {
   });
   const [itemPurchaseRate, setItemPurchaseRate] = useState("");
   const [itemSaleRate, setItemSaleRate] = useState("");
-  const [dateFilter, setDateFilter] = useState("lastWeek");
+  const [dateFilter, setDateFilter] = useState("thisWeek");
 
   useEffect(() => {
     const savedFilters = localStorage.getItem("filters");
@@ -83,39 +83,49 @@ export default function Home() {
       if (userId) {
         try {
           const now = new Date();
-          const {startDate,endDate}= getDateRange(dateFilter);
+          const { startDate, endDate } = getDateRange(dateFilter);
           function formatDate(date) {
             return date.toISOString().split("T")[0]; // gives "YYYY-MM-DD"
           }
           let start = formatDate(startDate);
           let end = formatDate(endDate);
-          
-          // console.log("Start:",start, "End:",end);
 
+          // console.log("Start:",start, "End:",end);
 
           let q = query(
             collection(db, "products"),
             where("user", "==", userId),
             where("createdAt", ">=", start),
-            where("createdAt", "<",end),
-            orderBy("createdAt","desc")
+            where("createdAt", "<=",end),
+            orderBy("createdAt", "desc")
           );
-          
 
           const querySnapshot = await getDocs(q);
           const products = querySnapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
           }));
-          // console.log("Fetched products:", products);
+          // console.log("Fetched products:", products.length);
+          // const dp = products.filter(
+          //   (d) => d.createdAt >= start && d.createdAt <= end
+          // );
+
+          // console.log("diffp", dp.length, data.length);
+          // const dpIds = new Set(dp.map((item) => item.id));
+
+          // const diffp = data.filter((item) => !dpIds.has(item.id));
+
+          // console.log("Missing items:", diffp.length);
+          // console.log(diffp);
 
           // Apply filters locally (case-insensitive, partial matching)
           const filteredProducts = products.filter((product) => {
             const matchesCategory = filterCategory
-              ? String(product.category || "")
-                  .toLowerCase()
-                  .includes(filterCategory.toLowerCase())
+              ? (product.category || []).some((cat) =>
+                  cat.toLowerCase().includes(filterCategory.toLowerCase())
+                )
               : true;
+
             const matchesFabricator = filterFabricator
               ? (product.fabricator || "")
                   .toLowerCase()
@@ -184,6 +194,11 @@ export default function Home() {
           });
 
           setData(filteredProducts);
+          // console.log("filtep",data.length);
+          const diff = products.filter(
+            (item) => !filteredProducts.includes(item)
+          );
+          // console.log(diff);
         } catch (error) {
           console.error("Error fetching data: ", error);
         }
@@ -251,9 +266,7 @@ export default function Home() {
       }
     }
   };
-
   const filteredData = data.filter((item) => {
-    // console.log("Filtering item:", item); // Log each item before filtering
     return (
       item.itemName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       String(item.category).toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -263,6 +276,7 @@ export default function Home() {
       item.clothQuality.toLowerCase().includes(searchQuery.toLowerCase())
     );
   });
+
   const totalMeter = filteredData.reduce((sum, item) => {
     const meterValue = parseFloat(item.meter) || 0; // Ensure meter is a number
     return sum + meterValue;
@@ -344,13 +358,14 @@ export default function Home() {
         <select
           value={dateFilter}
           onChange={(e) => {
-            setDateFilter(e.target.value)
-            console.log(filteredData);
+            setDateFilter(e.target.value);
           }}
           className="mx-2 bg-blue-500"
         >
-          {DATE_FILTER_OPTIONS.map((daterange)=>(
-            <option value={daterange.value}>{daterange.label}</option>
+          {DATE_FILTER_OPTIONS.map((daterange) => (
+            <option value={daterange.value} key={daterange.value}>
+              {daterange.label}
+            </option>
           ))}
         </select>
         <FilterModal

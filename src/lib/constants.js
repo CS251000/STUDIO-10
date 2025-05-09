@@ -56,8 +56,8 @@ export const getDateRange = (key) => {
         break;
   
       case "allTime":
-        startDate = new Date(2000, 0, 1); // arbitrarily early
-        endDate   = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        startDate = new Date(2020, 0, 1); // arbitrarily early
+        endDate   = new Date(now.getFullYear()+1, now.getMonth(), now.getDate() + 1);
         break;
   
       default:

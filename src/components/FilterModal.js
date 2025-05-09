@@ -170,7 +170,7 @@ const FilterModal = ({ isOpen, onClose, onApply }) => {
           {/* Rate Costing Range */}
           <div className="mb-4">
             <label className="block text-sm font-medium mb-2">
-              Filter by Item Purchase
+              Filter by Rate Costing
             </label>
             <div className="flex space-x-2">
               <input
