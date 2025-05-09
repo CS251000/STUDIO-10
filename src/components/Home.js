@@ -95,7 +95,7 @@ export default function Home() {
           let q = query(
             collection(db, "products"),
             where("user", "==", userId),
-            where("createdAt", ">=", start),
+            where("createdAt", ">", start),
             where("createdAt", "<=",end),
             orderBy("createdAt", "desc")
           );

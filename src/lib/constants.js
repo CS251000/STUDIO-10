@@ -24,7 +24,7 @@ export const getDateRange = (key) => {
     switch (key) {
       case "today":
         startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        endDate   = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        endDate   = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1 );
         break;
   
       case "yesterday":
