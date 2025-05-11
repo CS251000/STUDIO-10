@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import Card from "./Card";
 import { db, auth, storage } from "../firebaseConfig";
@@ -38,7 +38,7 @@ export default function Home() {
   });
   const [itemPurchaseRate, setItemPurchaseRate] = useState("");
   const [itemSaleRate, setItemSaleRate] = useState("");
-  const [dateFilter, setDateFilter] = useState("thisWeek");
+  const [dateFilter, setDateFilter] = useState("allTime");
 
   useEffect(() => {
     const savedFilters = localStorage.getItem("filters");
@@ -54,6 +54,7 @@ export default function Home() {
         itemPurchaseRate,
         itemSaleRate,
         clothName,
+        dateFilter,
       } = JSON.parse(savedFilters);
       setFilterCategory(category || "");
       setFilterFabricator(fabricator || "");
@@ -65,6 +66,7 @@ export default function Home() {
       setItemPurchaseRate(itemPurchaseRate || "");
       setItemSaleRate(itemSaleRate || "");
       setFilterClothName(clothName || "");
+      setDateFilter(dateFilter || "allTime");
     }
   }, []);
 
@@ -96,7 +98,7 @@ export default function Home() {
             collection(db, "products"),
             where("user", "==", userId),
             where("createdAt", ">", start),
-            where("createdAt", "<=",end),
+            where("createdAt", "<=", end),
             orderBy("createdAt", "desc")
           );
 
@@ -318,33 +320,33 @@ export default function Home() {
     setItemSaleRate(itemSale);
     setFilterClothName(clothName);
   };
-  useEffect(() => {
-    const savedFilters = localStorage.getItem("filters");
-    if (savedFilters) {
-      const {
-        category,
-        fabricator,
-        clothQuality,
-        status,
-        clorsh,
-        clothAgent,
-        rateCostingRange,
-        itemPurchase,
-        itemSale,
-        clothName,
-      } = JSON.parse(savedFilters);
-      setFilterCategory(category || "");
-      setFilterFabricator(fabricator || "");
-      setFilterClothQuality(clothQuality || "");
-      setFilterStatus(status !== undefined ? status : null);
-      setFilterClorsh(clorsh !== undefined ? clorsh : false);
-      setFilterAgent(clothAgent || "");
-      setRateCostingRange(rateCostingRange || [0, 500]);
-      setItemPurchaseRate(itemPurchase || "");
-      setItemSaleRate(itemSale || "");
-      setFilterClothName(clothName || "");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const savedFilters = localStorage.getItem("filters");
+  //   if (savedFilters) {
+  //     const {
+  //       category,
+  //       fabricator,
+  //       clothQuality,
+  //       status,
+  //       clorsh,
+  //       clothAgent,
+  //       rateCostingRange,
+  //       itemPurchase,
+  //       itemSale,
+  //       clothName,
+  //     } = JSON.parse(savedFilters);
+  //     setFilterCategory(category || "");
+  //     setFilterFabricator(fabricator || "");
+  //     setFilterClothQuality(clothQuality || "");
+  //     setFilterStatus(status !== undefined ? status : null);
+  //     setFilterClorsh(clorsh !== undefined ? clorsh : false);
+  //     setFilterAgent(clothAgent || "");
+  //     setRateCostingRange(rateCostingRange || [0, 500]);
+  //     setItemPurchaseRate(itemPurchase || "");
+  //     setItemSaleRate(itemSale || "");
+  //     setFilterClothName(clothName || "");
+  //   }
+  // }, []);
 
   return (
     <div className="container mx-auto px-4 mt-4">
@@ -358,7 +360,14 @@ export default function Home() {
         <select
           value={dateFilter}
           onChange={(e) => {
-            setDateFilter(e.target.value);
+            const newDateFilter = e.target.value;
+            setDateFilter(newDateFilter);
+
+            // Update localStorage filter
+            const savedFilters =
+              JSON.parse(localStorage.getItem("filters")) || {};
+            savedFilters.dateFilter = newDateFilter;
+            localStorage.setItem("filters", JSON.stringify(savedFilters));
           }}
           className="mx-2 bg-blue-500"
         >

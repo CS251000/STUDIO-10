@@ -32,18 +32,26 @@ export const getDateRange = (key) => {
         endDate   = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         break;
   
-      case "thisWeek":
-        const dayOfWeek = now.getDay(); // Sunday = 0
-        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek);
-        endDate   = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-        break;
-  
-      case "lastWeek":
-        const lastWeekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay() - 7);
-        const lastWeekEnd   = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
-        startDate = lastWeekStart;
-        endDate   = lastWeekEnd;
-        break;
+      case "thisWeek": {
+      const dayOfWeek = now.getDay(); 
+    
+      const offsetToTuesday = (dayOfWeek + 6) % 7; 
+      startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - offsetToTuesday);
+      endDate = new Date(startDate);
+      endDate.setDate(startDate.getDate() + 6); 
+      break;
+}
+
+case "lastWeek": {
+    const dayOfWeek = now.getDay();
+    const offsetToLastTuesday = (dayOfWeek + 6) % 7 + 7;
+
+    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - offsetToLastTuesday);
+    endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + 6); // Monday of last week
+    break;
+}
+
   
       case "thisMonth":
         startDate = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -62,8 +70,8 @@ export const getDateRange = (key) => {
   
       default:
         // fallback: this week
-        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
-        endDate   = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        startDate = new Date(2020, 0, 1); // arbitrarily early
+        endDate   = new Date(now.getFullYear()+1, now.getMonth(), now.getDate() + 1);
     }
   
     return { startDate, endDate };
