@@ -39,6 +39,7 @@ export default function Home() {
   const [itemPurchaseRate, setItemPurchaseRate] = useState("");
   const [itemSaleRate, setItemSaleRate] = useState("");
   const [dateFilter, setDateFilter] = useState("allTime");
+  const[stars,setStars]= useState(0);
 
   useEffect(() => {
     const savedFilters = localStorage.getItem("filters");
@@ -412,6 +413,7 @@ export default function Home() {
             itemPurchase={card.itempurchase}
             itemSale={card.itemsale}
             clothAgent={card.clothagent}
+            stars={card.stars}
           />
         ))}
       </div>

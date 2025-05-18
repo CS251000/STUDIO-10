@@ -35,7 +35,7 @@ export const getDateRange = (key) => {
       case "thisWeek": {
       const dayOfWeek = now.getDay(); 
     
-      const offsetToTuesday = (dayOfWeek + 6) % 7; 
+      const offsetToTuesday = (dayOfWeek + 5) % 7; 
       startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - offsetToTuesday);
       endDate = new Date(startDate);
       endDate.setDate(startDate.getDate() + 6); 

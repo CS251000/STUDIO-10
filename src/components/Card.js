@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, doc, setDoc, deleteDoc, query, where, getDocs } from 'firebase/firestore';
+import ReactStars from 'react-rating-stars-component';
 import { db, auth } from '../firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 
-export default function Card({ id, imag, jobslip, itemName, status, category = [], fabricator, clothname, quality, meter, onDelete, expenses = [], averagePiece, clothSaleRate, fabrication, timestamp,desc,clorsh,itemPurchase,itemSale,clothPurchaseRate,clothAgent }) {
+export default function Card({ id, imag, jobslip, itemName, status, category = [], fabricator, clothname, quality, meter, onDelete, expenses = [], averagePiece, clothSaleRate, fabrication, timestamp,desc,clorsh,itemPurchase,itemSale,clothPurchaseRate,clothAgent,stars }) {
 
   const [isReordered, setIsReordered] = useState(false);
   const [isin,setIsin]=useState(false);
   const [inDate, setInDate] = useState(null);
-
   const [userId, setUserId] = useState(null);
 
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [password, setPassword] = useState('');
   const [actionType, setActionType] = useState(''); // "update" or "delete"
   const [error, setError] = useState('');
-
   const PASSWORD="AZX";
   const p2="azx"
 
@@ -73,38 +72,43 @@ export default function Card({ id, imag, jobslip, itemName, status, category = [
       console.error('Error handling reorder:', error);
     }
   };
-  const handleinbutton = async () => {
-    if (!id) {
-      console.error('Item ID is missing');
-      return;
-    }
+  // const handleinbutton = async () => {
+  //   if (!id) {
+  //     console.error('Item ID is missing');
+  //     return;
+  //   }
   
-    try {
-      const productRef = doc(db, 'products', id);
-      const newInValue = !isin; // toggle the "in" field
-      const updateData = {
-        in: newInValue,
-      };
+  //   try {
+  //     const productRef = doc(db, 'products', id);
+  //     const newInValue = !isin; // toggle the "in" field
+  //     const updateData = {
+  //       in: newInValue,
+  //     };
   
-      if (newInValue) {
-        updateData.indate = new Date(); // only set date when marked IN
-      } else {
-        updateData.indate = null; // or remove it if going OUT (optional)
-      }
+  //     if (newInValue) {
+  //       updateData.indate = new Date(); // only set date when marked IN
+  //     } else {
+  //       updateData.indate = null; // or remove it if going OUT (optional)
+  //     }
   
-      await setDoc(productRef, updateData, { merge: true });
-      setIsin(newInValue);
-      console.log(`Product marked as ${newInValue ? 'IN' : 'OUT'}`);
-    } catch (error) {
-      console.error('Error toggling IN status:', error);
-    }
-  };
+  //     await setDoc(productRef, updateData, { merge: true });
+  //     setIsin(newInValue);
+  //     console.log(`Product marked as ${newInValue ? 'IN' : 'OUT'}`);
+  //   } catch (error) {
+  //     console.error('Error toggling IN status:', error);
+  //   }
+  // };
 
-  
-  
-  
- 
- 
+  const handleRatingChange = (newRating) => {
+    const productRef = doc(db, 'products', id);
+    setDoc(productRef, { stars: newRating }, { merge: true })
+      .then(() => {
+        console.log('Rating updated successfully');
+      })
+      .catch((error) => {
+        console.error('Error updating rating:', error);
+      });
+  }
 
   const handlePasswordSubmit = () => {
     if (password === PASSWORD|| password=== p2) {
@@ -162,21 +166,27 @@ if (timestamp && typeof timestamp.toDate === 'function') {
 ) : null} */}
       
       <div className="p-5">
-        
-        
+        <ReactStars
+          count={5}
+          onChange={handleRatingChange}
+          size={24}
+          activeColor="#ffd700"
+          emptyIcon={<i className="far fa-star"></i>}
+          value={stars}
+        />
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-blue-700">
           Job Slip: &nbsp; <span className="text-black text-md font-normal">{jobslip}</span>
         </h5>
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-black-700">
           <span className="text-white bg-black p-2 rounded-xl text-md font-normal">{clorsh?'SPO':'CPO'}</span>
         </h5>
-        <button
+        {/* <button
             type="button"
             onClick={handleinbutton}
             className={`text-white ${isin ? 'bg-green-700' : 'bg-blue-700 hover:bg-blue-800'} focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 flex flex-row-reverse ml-auto`}
           >
             IN
-          </button>
+          </button> */}
         <button
             type="button"
             onClick={handleReorder}
