@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import Card from "./Card";
 import { db, auth, storage } from "../firebaseConfig";
-
+import ReactStars from "react-rating-stars-component";
 import {
   collection,
   getDocs,
@@ -22,7 +22,7 @@ export default function Home() {
   const { searchQuery } = useOutletContext();
   const [data, setData] = useState([]);
   const [userId, setUserId] = useState(null);
-
+  const [filterStars, setFilterStars] = useState(null);
   // State to manage filters and modal visibility
   const [filterCategory, setFilterCategory] = useState("");
   const [filterFabricator, setFilterFabricator] = useState("");
@@ -56,6 +56,7 @@ export default function Home() {
         itemSaleRate,
         clothName,
         dateFilter,
+        filterStars,
       } = JSON.parse(savedFilters);
       setFilterCategory(category || "");
       setFilterFabricator(fabricator || "");
@@ -68,6 +69,7 @@ export default function Home() {
       setItemSaleRate(itemSaleRate || "");
       setFilterClothName(clothName || "");
       setDateFilter(dateFilter || "allTime");
+      setFilterStars(filterStars || null);
     }
   }, []);
 
@@ -158,6 +160,8 @@ export default function Home() {
                   .toLowerCase()
                   .includes(itemPurchaseRate.toLowerCase())
               : true;
+            const matchesStars =
+              filterStars !== null ? product.stars == filterStars : true;
 
             const matchesItemSale = itemSaleRate
               ? String(product.itemsale || "")
@@ -192,7 +196,8 @@ export default function Home() {
               matchesRateCosting &&
               matchesItemPurchase &&
               matchesItemSale &&
-              matchesClothName
+              matchesClothName &&
+              matchesStars
             );
           });
 
@@ -222,6 +227,7 @@ export default function Home() {
     itemSaleRate,
     filterClothName,
     dateFilter,
+    filterStars,
   ]);
 
   const handleDelete = async (id) => {
@@ -358,6 +364,7 @@ export default function Home() {
         >
           Filter
         </button>
+        
         <select
           value={dateFilter}
           onChange={(e) => {
@@ -383,6 +390,30 @@ export default function Home() {
           onClose={() => setIsFilterModalOpen(false)}
           onApply={handleApplyFilters}
         />
+        <div className="flex items-center space-x-2">
+  <ReactStars
+    count={5}
+    size={24}
+    value={filterStars}
+    onChange={(newRating) => {
+      setFilterStars(newRating);
+      localStorage.setItem("filterStars", newRating.toString());
+    }}
+    activeColor="#ffd700"
+  />
+  {filterStars!=null && (
+    <button
+      onClick={() => {
+        setFilterStars((prev)=>(prev=null));
+        localStorage.setItem("filterStars", null);
+      }}
+      className="px-2 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 transition"
+    >
+      Reset
+    </button>
+  )}
+</div>
+
       </div>
       <div className="my-4 text-xl font-bold text-gray-700">
         Total Meter: {totalMeter.toFixed(2)}
