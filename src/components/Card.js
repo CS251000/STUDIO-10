@@ -198,7 +198,7 @@ if (timestamp && typeof timestamp.toDate === 'function') {
         <p className="mb-3 font-normal text-gray-700">Item Purchase: {itemPurchase}</p>
         <p className="mb-3 font-normal text-gray-700">Item Sale: {itemSale}</p>
         <p className="mb-3 font-normal text-gray-700">Cloth Purchase Rate: {clothPurchaseRate}</p>
-        <p className="mb-3 font-normal text-gray-700">Cloth Sale Rate: {clothSaleRate}</p>
+        <p className="mb-3 font-normal text-black">Cloth Sale Rate: <span className='font-extrabold'>{clothSaleRate}</span></p>
 
         <p className="mb-3 font-normal text-gray-700">Date: {formattedDate}</p>
         <p className="mb-3 font-normal text-gray-700">Category: {category.join(' , ')}</p>
